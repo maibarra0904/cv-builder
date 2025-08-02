@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="20" fill="#3B82F6"/>
+  
+  <!-- Document -->
+  <rect x="20" y="15" width="50" height="70" rx="4" fill="white"/>
+  
+  <!-- Lines representing text -->
+  <rect x="25" y="22" width="25" height="2" rx="1" fill="#E5E7EB"/>
+  <rect x="25" y="28" width="35" height="2" rx="1" fill="#E5E7EB"/>
+  <rect x="25" y="34" width="30" height="2" rx="1" fill="#E5E7EB"/>
+  
+  <!-- Section divider -->
+  <rect x="25" y="42" width="40" height="1" rx="0.5" fill="#D1D5DB"/>
+  
+  <!-- More text lines -->
+  <rect x="25" y="48" width="20" height="2" rx="1" fill="#E5E7EB"/>
+  <rect x="25" y="54" width="32" height="2" rx="1" fill="#E5E7EB"/>
+  <rect x="25" y="60" width="28" height="2" rx="1" fill="#E5E7EB"/>
+  <rect x="25" y="66" width="25" height="2" rx="1" fill="#E5E7EB"/>
+  
+  <!-- Profile icon -->
+  <circle cx="35" cy="25" r="4" fill="#3B82F6"/>
+  
+  <!-- Accent element -->
+  <rect x="75" y="25" width="12" height="35" rx="6" fill="#10B981"/>
+  <rect x="78" y="30" width="6" height="2" rx="1" fill="white"/>
+  <rect x="78" y="35" width="6" height="2" rx="1" fill="white"/>
+  <rect x="78" y="40" width="6" height="2" rx="1" fill="white"/>
+</svg>

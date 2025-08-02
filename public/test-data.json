@@ -1,0 +1,66 @@
+{
+  "cvData": {
+    "personalData": {
+      "firstName": "Juan",
+      "lastName": "Pérez",
+      "email": "juan.perez@email.com",
+      "phone": "+1234567890",
+      "address": "123 Calle Principal, Ciudad",
+      "photo": null
+    },
+    "profile": {
+      "summary": "Desarrollador Full Stack con 5 años de experiencia en React y Node.js"
+    },
+    "education": [
+      {
+        "id": "edu1",
+        "institution": "Universidad Nacional",
+        "degree": "Ingeniería en Sistemas",
+        "startDate": "2015",
+        "endDate": "2019",
+        "description": "Graduado con honores"
+      }
+    ],
+    "experience": [
+      {
+        "id": "exp1",
+        "company": "Tech Corp",
+        "position": "Desarrollador Frontend",
+        "startDate": "2020",
+        "endDate": "2024",
+        "description": "Desarrollo de aplicaciones web con React y TypeScript"
+      }
+    ],
+    "skills": [
+      {
+        "id": "skill1",
+        "name": "React",
+        "level": "Avanzado"
+      },
+      {
+        "id": "skill2",
+        "name": "TypeScript",
+        "level": "Intermedio"
+      }
+    ],
+    "languages": [],
+    "hobbies": [],
+    "certificates": [],
+    "courses": [],
+    "projects": [],
+    "volunteers": []
+  },
+  "sectionConfig": {
+    "education": true,
+    "experience": true,
+    "skills": true,
+    "languages": false,
+    "hobbies": false,
+    "certificates": false,
+    "courses": false,
+    "projects": false,
+    "volunteers": false
+  },
+  "currentTemplate": "modern",
+  "exportDate": "2025-07-30T10:00:00.000Z"
+}
