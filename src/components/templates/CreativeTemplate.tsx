@@ -8,13 +8,13 @@ interface TemplateProps {
 }
 
 export function CreativeTemplate({ data, config }: Readonly<TemplateProps>) {
-  const { personalData, profile, education, experience, skills } = data;
+  const { personalData, profile, education, experience, skills } = data || {};
   const sortedSections = getSortedVisibleSections(config);
 
   const renderSection = (sectionKey: keyof typeof config) => {
     switch (sectionKey) {
       case 'profile':
-        return profile.summary && (
+        return profile && profile.summary && (
           <div className="mb-4" key={sectionKey}>
             <h2 className="text-lg font-bold text-purple-800 mb-2 bg-gradient-to-r from-purple-200 to-pink-200 p-2 rounded">
               PERFIL PROFESIONAL
@@ -24,7 +24,7 @@ export function CreativeTemplate({ data, config }: Readonly<TemplateProps>) {
         );
 
       case 'experience':
-        return experience.length > 0 && (
+        return Array.isArray(experience) && experience.length > 0 && (
           <div className="mb-4" key={sectionKey}>
             <h2 className="text-lg font-bold text-purple-800 mb-2 bg-gradient-to-r from-purple-200 to-pink-200 p-2 rounded">
               EXPERIENCIA PROFESIONAL
@@ -51,7 +51,7 @@ export function CreativeTemplate({ data, config }: Readonly<TemplateProps>) {
         );
 
       case 'education':
-        return education.length > 0 && (
+        return Array.isArray(education) && education.length > 0 && (
           <div className="mb-4" key={sectionKey}>
             <h2 className="text-lg font-bold text-purple-800 mb-2 bg-gradient-to-r from-purple-200 to-pink-200 p-2 rounded">
               FORMACIÓN ACADÉMICA
@@ -75,7 +75,7 @@ export function CreativeTemplate({ data, config }: Readonly<TemplateProps>) {
         );
 
       case 'skills':
-        return skills.length > 0 && (
+        return Array.isArray(skills) && skills.length > 0 && (
           <div className="mb-4" key={sectionKey}>
             <h2 className="text-lg font-bold text-purple-800 mb-2 bg-gradient-to-r from-purple-200 to-pink-200 p-2 rounded">
               COMPETENCIAS

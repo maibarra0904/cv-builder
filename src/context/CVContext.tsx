@@ -1,4 +1,5 @@
 import { createContext, useReducer, useEffect, useCallback, useMemo, useState } from 'react';
+import { showJsonLoadErrorAlert } from '../utils/showJsonLoadErrorAlert';
 import type { ReactNode } from 'react';
 import type { CVData, SectionConfig, CVTemplate } from '../types/cv';
 
@@ -363,6 +364,7 @@ function getInitialState(): CVState {
     };
   } catch (error) {
     console.error('Error loading saved data from localStorage:', error);
+    showJsonLoadErrorAlert();
     return initialState;
   }
 }

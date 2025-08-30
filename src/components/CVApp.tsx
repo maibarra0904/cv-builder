@@ -7,6 +7,7 @@ import { TemplateSelector } from './TemplateSelector';
 import { PDFExporter } from './PDFExporter';
 import { DataManager } from './DataManager';
 import { FileText, Settings, Database } from 'lucide-react';
+import swasLogo from '../assets/swas-apps.png';
 
 function CVApp() {
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
@@ -68,14 +69,19 @@ function CVApp() {
         <header className="bg-white/95 backdrop-blur-md shadow-xl border-b border-gray-200/50 px-4 md:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 md:space-x-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg">
-                <FileText className="h-6 w-6 md:h-8 md:w-8 text-white" />
+              {/* Bloque vertical: icono Info-Vitae arriba, SWAS logo debajo */}
+              <div className="flex flex-col items-center justify-center mr-2">
+                <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg mb-1">
+                  <FileText className="h-6 w-6 md:h-8 md:w-8 text-white" />
+                </div>
+                <img src={swasLogo} alt="SWAS Logo" className="h-6 md:h-6 w-auto rounded shadow-md" style={{background: 'white', imageRendering: 'auto'}} />
               </div>
-              <div>
+              {/* Bloque de texto a la derecha del bloque vertical */}
+              <div className="flex flex-col justify-center">
                 <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                  CV Builder
+                  Info-Vitae
                 </h1>
-                <p className="text-xs md:text-sm text-gray-600 hidden sm:block">Crea tu hoja de vida profesional</p>
+                <p className="text-xs md:text-sm text-gray-600 hidden sm:block">Transforma tu experiencia en una infografía impactante</p>
               </div>
             </div>
             <div className="flex items-center space-x-2 md:space-x-4">

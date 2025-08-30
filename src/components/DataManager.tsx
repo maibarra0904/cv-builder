@@ -286,13 +286,13 @@ export function DataManager() {
               onClick={handleExportData}
               className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
-              <Download className="h-4 w-4" />
+              <Upload className="h-4 w-4" />
               <span>Exportar Respaldo JSON</span>
             </button>
 
             {/* Importar datos */}
             <label className="w-full flex items-center justify-center space-x-2 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors cursor-pointer text-sm font-medium">
-              <Upload className="h-4 w-4" />
+              <Download className="h-4 w-4" />
               <span>Importar Respaldo JSON</span>
               <input
                 ref={fileInputRef}
