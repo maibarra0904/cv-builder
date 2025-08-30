@@ -9,7 +9,7 @@ import { DataManager } from './DataManager';
 import { FileText, Settings, Database } from 'lucide-react';
 import swasLogo from '../assets/swas-apps.png';
 
-function CVApp() {
+function CVApp({ onLogout }: { onLogout?: () => void }) {
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   const [isTemplateSelectorVisible, setIsTemplateSelectorVisible] = useState(false);
   const [showDataManager, setShowDataManager] = useState(false);
@@ -100,6 +100,13 @@ function CVApp() {
                 <span className="hidden sm:inline">Datos</span>
               </button>
               <PDFExporter />
+              <button
+                onClick={onLogout}
+                className="flex items-center space-x-1 md:space-x-2 px-3 md:px-5 py-2.5 bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-lg hover:from-gray-500 hover:to-gray-700 transition-all duration-200 shadow-lg shadow-gray-400/25 hover:shadow-gray-700/30 hover:scale-105 text-sm md:text-base font-medium backdrop-blur-sm"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" /></svg>
+                <span className="hidden sm:inline">Cerrar sesión</span>
+              </button>
             </div>
           </div>
         </header>

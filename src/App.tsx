@@ -3,6 +3,7 @@ import CVApp from './components/CVApp';
 import Login from './Login';
 import './App.css';
 
+
 const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
 
@@ -11,15 +12,20 @@ const App: React.FC = () => {
     localStorage.setItem('token', newToken);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+  };
+
   if (!token) {
     return <Login onLogin={handleLogin} />;
   }
 
   return (
     <div>
-      <CVApp />
+      <CVApp onLogout={handleLogout} />
       {/* Aquí va el contenido de la app para usuarios autenticados */}
-              <h1 className="text-2xl font-bold">Bienvenido a Info-Vitae</h1>
+      <h1 className="text-2xl font-bold">Bienvenido a Info-Vitae</h1>
       {/* ...resto de la app 2. */}
     </div>
   );
