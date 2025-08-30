@@ -20,7 +20,7 @@ const App: React.FC = () => {
       <CVApp />
       {/* Aquí va el contenido de la app para usuarios autenticados */}
               <h1 className="text-2xl font-bold">Bienvenido a Info-Vitae</h1>
-      {/* ...resto de la app... */}
+      {/* ...resto de la app 2. */}
     </div>
   );
 };
