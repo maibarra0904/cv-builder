@@ -39,7 +39,7 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
         <div className="flex justify-center mb-6">
-          <img src="/src/assets/swas-logo.svg" alt="Logo SWAS" className="h-16 w-auto" />
+          <img src="/src/assets/swas-logo.png" alt="Logo SWAS" className="h-16 w-auto" />
         </div>
         <h2 className="text-2xl font-bold mb-6 text-center">Iniciar sesión</h2>
         {error && <div className="mb-4 text-red-600 text-sm text-center">{error}</div>}
