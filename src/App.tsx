@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CVApp from './components/CVApp';
 import Login from './Login';
+import NoAccess from './NoAccess';
 import './App.css';
 
 
@@ -16,6 +17,19 @@ const App: React.FC = () => {
     localStorage.removeItem('token');
     setToken(null);
   };
+
+  const [noAccess, setNoAccess] = useState(false);
+
+  // Detectar si estamos en la página de no acceso
+  React.useEffect(() => {
+    if (window.location.pathname === '/no-access') {
+      setNoAccess(true);
+    }
+  }, []);
+
+  if (noAccess) {
+    return <NoAccess />;
+  }
 
   if (!token) {
     return <Login onLogin={handleLogin} />;

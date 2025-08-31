@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import swasLogo from './assets/swas-logo.svg';
+import swasLogo from './assets/swas-logo.png';
 
 
 
@@ -11,6 +11,7 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     const API_URL = import.meta.env.VITE_BACKEND_URL;
+    const PROJECT_ID = import.meta.env.VITE_PROJECT_ID;
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -24,6 +25,15 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
         throw new Error('Credenciales incorrectas');
       }
       const data = await response.json();
+      // Guardar purchasedProjects en localStorage
+      if (data.user && Array.isArray(data.user.purchasedProjects)) {
+        localStorage.setItem('purchasedProjects', JSON.stringify(data.user.purchasedProjects));
+        // Validar acceso
+        if (!PROJECT_ID || !data.user.purchasedProjects.includes(PROJECT_ID)) {
+          window.location.href = '/no-access';
+          return;
+        }
+      }
       onLogin(data.token);
     } catch (err) {
       if (err instanceof Error) {
