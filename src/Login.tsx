@@ -47,7 +47,6 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
   };
 
   return (
-    <>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
         <div className="flex justify-center mb-6">
@@ -86,6 +85,10 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
         </button>
       </form>
     </div>
+    
+
+  );
+};
     <div className="mt-4 text-center">
             <a 
               href={`${import.meta.env.VITE_FRONTEND_URL}/register`} 
@@ -95,10 +98,6 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
             >
               ¿No tienes cuenta? Regístrate aquí
             </a>
-      </div>
-    </>
-  );
-};
-          
+      </div>      
 
 export default Login;
