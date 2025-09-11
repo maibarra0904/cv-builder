@@ -48,45 +48,55 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-        <div className="flex justify-center mb-6">
-          <img src={swasLogo} alt="Logo SWAS" className="h-16 w-auto" />
+      <div className="w-full max-w-sm">
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md">
+          <div className="flex justify-center mb-6">
+            <img src={swasLogo} alt="Logo SWAS" className="h-16 w-auto" />
+          </div>
+          <h2 className="text-2xl font-bold mb-6 text-center">Iniciar sesión</h2>
+          {error && <div className="mb-4 text-red-600 text-sm text-center">{error}</div>}
+          <div className="mb-4">
+            <label htmlFor="login-email" className="block mb-1 text-gray-700">Correo electrónico</label>
+            <input
+              id="login-email"
+              type="email"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label htmlFor="login-password" className="block mb-1 text-gray-700">Contraseña</label>
+            <input
+              id="login-password"
+              type="password"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold"
+            disabled={loading}
+          >
+            {loading ? 'Ingresando...' : 'Ingresar'}
+          </button>
+        </form>
+        <div className="mt-4 text-center">
+          <a
+            href={`${import.meta.env.VITE_FRONTEND_URL}/register`}
+            className="text-blue-500 underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ¿No tienes cuenta? Regístrate aquí
+          </a>
         </div>
-        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar sesión</h2>
-        {error && <div className="mb-4 text-red-600 text-sm text-center">{error}</div>}
-        <div className="mb-4">
-          <label htmlFor="login-email" className="block mb-1 text-gray-700">Correo electrónico</label>
-          <input
-            id="login-email"
-            type="email"
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label htmlFor="login-password" className="block mb-1 text-gray-700">Contraseña</label>
-          <input
-            id="login-password"
-            type="password"
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold"
-          disabled={loading}
-        >
-          {loading ? 'Ingresando...' : 'Ingresar'}
-        </button>
-      </form>
+      </div>
     </div>
-    
-
   );
 };
     <div className="mt-4 text-center">
