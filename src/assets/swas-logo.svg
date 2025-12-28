@@ -44,8 +44,8 @@
   </g>
   <!-- Palabras descriptivas en una sola línea -->
   <g filter="url(#textShadow)">
-    <!-- Static Web (rojo) -->
-    <text x="60" y="155" font-family="Arial, sans-serif" font-size="40" font-weight="700" fill="url(#redGradient)">Static Web</text>
+    <!-- Smart Web (rojo) -->
+    <text x="60" y="155" font-family="Arial, sans-serif" font-size="40" font-weight="700" fill="url(#redGradient)">Smart Web</text>
     <!-- Application Store (azul) -->
   <text x="275" y="155" font-family="Arial, sans-serif" font-size="40" font-weight="700" fill="url(#blueGradient)">Application Store</text>
   </g>
