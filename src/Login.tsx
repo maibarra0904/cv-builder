@@ -29,7 +29,10 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
         localStorage.setItem('purchasedProjects', JSON.stringify(data.user.purchasedProjects));
       }
       // Store user object locally for other components
-      try { localStorage.setItem('user', JSON.stringify(data.user || {})); } catch { console.log(error) }
+      try { 
+        localStorage.setItem('user', JSON.stringify(data.user || {})); 
+        if (data.user && data.user.name) localStorage.setItem('userName', data.user.name);
+      } catch { console.log(error) }
       if (!data.token) throw new Error('Token no recibido');
       onLogin(data.token);
     } catch (err) {

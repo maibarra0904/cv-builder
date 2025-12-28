@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CVProvider } from '../context/CVContext';
 import { LanguageProvider } from '../context/LanguageContext';
 import { Sidebar } from './Sidebar';
@@ -54,6 +54,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
   });
   const [serverHasApiKey, setServerHasApiKey] = useState<boolean | null>(null);
   const [showSetupModal, setShowSetupModal] = useState(false);
+  const [userName, setUserName] = useState<string>('');
   // Helper component that resolves translations inside LanguageProvider
   function Translate({ path, fallback }: { path: string; fallback?: string }) {
     const { t } = useTranslation();
@@ -242,6 +243,35 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
     })();
   }, []);
 
+  // Try to read user name from JWT token stored in localStorage (safe best-effort)
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return;
+      const stored = window.localStorage.getItem('userName');
+      if (stored) {
+        setUserName(stored);
+        return;
+      }
+      const token = window.localStorage.getItem('token');
+      if (!token) return;
+      const parts = token.split('.');
+      if (parts.length < 2) return;
+      const payload = parts[1];
+      // base64url -> base64
+      const b64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const decoded = atob(b64.replace(/=+$/, ''));
+      // Decode UTF-8 safely
+      const jsonString = decodeURIComponent(Array.prototype.map.call(decoded, function(c: string) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const obj = JSON.parse(jsonString || '{}');
+      const name = (obj.fullName || obj.name || `${obj.firstName || ''} ${obj.lastName || ''}` || '').trim();
+      if (name) setUserName(name);
+    } catch (err) {
+      // ignore parsing errors
+    }
+  }, []);
+
   function ModePanel({ onSelect }: { onSelect?: (mode: 'cv' | 'cover') => void }) {
     const cv = useCV();
     const { t } = useTranslation();
@@ -283,8 +313,9 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
 
   function HeaderControls() {
     const { t } = useTranslation();
-    return (
-      <div className="flex items-center space-x-2 md:space-x-4">
+    // Desktop controls (visible on sm and up)
+    const desktop = (
+      <div className="hidden sm:flex items-center space-x-2 md:space-x-4">
         {documentMode === 'cv' && (
           <>
             <button
@@ -342,6 +373,63 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
         </button>
       </div>
     );
+
+    // Mobile controls (visible below sm)
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+      function onDocClick(e: MouseEvent) {
+        if (!ref.current) return;
+        if (!(e.target instanceof Node)) return;
+        if (!ref.current.contains(e.target)) setOpen(false);
+      }
+      document.addEventListener('click', onDocClick);
+      return () => document.removeEventListener('click', onDocClick);
+    }, []);
+
+    const mobile = (
+      <div className="flex sm:hidden items-center" ref={ref}>
+        <button
+          aria-haspopup="true"
+          aria-expanded={open}
+          onClick={() => setOpen(v => !v)}
+          className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring"
+          title="Menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        {open && (
+          <div className="absolute right-4 top-14 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+            <div className="py-2">
+              {documentMode === 'cv' && (
+                <button onClick={() => { handleToggleTemplateSelector(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('navigation.templates')}</button>
+              )}
+              {documentMode === 'cv' && (
+                <button onClick={() => { handleToggleDataManager(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('navigation.data')}</button>
+              )}
+              <button onClick={() => { handleToggleModeSelector(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('navigation.mode')} ({documentMode === 'cv' ? t('coverLetter.cv') : t('coverLetter.title')})</button>
+              <button onClick={() => { handleToggleDataPolicy(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('ui.dataPolicy')}</button>
+              <button onClick={() => { handleToggleDonation(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('ui.donate')}</button>
+              <div className="px-4 py-2">
+                <LanguageSelector />
+              </div>
+              <button onClick={() => { setOpen(false); if (onLogout) onLogout(); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('ui.logout')}</button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+
+    return (
+      <>
+        {desktop}
+        {mobile}
+      </>
+    );
   }
 
   return (
@@ -360,13 +448,14 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
               </div>
               {/* Bloque de texto a la derecha del bloque vertical */}
               <div className="flex flex-col justify-center">
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                   CV-Letter
                 </h1>
+                {userName && <div className="text-xs md:text-sm text-gray-600 mt-0.5">{userName}</div>}
               </div>
               <div className="flex flex-col items-center justify-center mr-2">
                 <a href="https://sw-as.online/" target="_blank" rel="noopener noreferrer" title="Smart Web Application Store">
-                  <img src={swasLogo} alt="SWAS Logo" aria-label="Smart Web Application Store" className="h-10 md:h-12 w-auto rounded shadow-md hover:scale-105 transition-transform" style={{background: 'white', imageRendering: 'auto'}} />
+                  <img src={swasLogo} alt="SWAS Logo" aria-label="Smart Web Application Store" className="h-8 md:h-10 w-auto rounded shadow-md hover:scale-105 transition-transform" style={{background: 'white', imageRendering: 'auto'}} />
                 </a>
               </div>
             </div>
