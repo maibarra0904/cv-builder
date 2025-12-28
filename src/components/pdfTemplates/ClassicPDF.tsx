@@ -1,4 +1,4 @@
-import React from 'react';
+// React import intentionally omitted (JSX runtime handles it)
 import { Document, Page, View, Text, Image, StyleSheet, Link } from '@react-pdf/renderer';
 import type { DocumentComponentType, PersonalData, Skill, Language } from '../../types/cv';
 import { translations } from '../../i18n/translations';

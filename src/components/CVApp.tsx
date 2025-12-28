@@ -49,7 +49,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
     try {
       return (typeof window !== 'undefined' && window.localStorage.getItem('coverLetterText')) || '';
     } catch (e) {
-      return e;
+      return '';
     }
   });
   const [serverHasApiKey, setServerHasApiKey] = useState<boolean | null>(null);
@@ -283,7 +283,6 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
 
   function HeaderControls() {
     const { t } = useTranslation();
-    const cv = useCV();
     return (
       <div className="flex items-center space-x-2 md:space-x-4">
         {documentMode === 'cv' && (
@@ -476,7 +475,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
                       // ignore localStorage errors
                     }
                     setCoverLetterText(text);
-                  }} serverHasApiKey={serverHasApiKey} />
+                  }} serverHasApiKey={serverHasApiKey ?? undefined} />
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1"><Translate path="coverLetter.editableLabel" fallback="Texto editable de la carta" /></label>

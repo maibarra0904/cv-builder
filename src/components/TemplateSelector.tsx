@@ -1,4 +1,4 @@
-import React from 'react';
+// React import intentionally omitted (JSX runtime handles it)
 import { useCV } from '../hooks/useCV';
 import type { CVTemplate } from '../types/cv';
 import useTranslation from '../i18n/useTranslation2';

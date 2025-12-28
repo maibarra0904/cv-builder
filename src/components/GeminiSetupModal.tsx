@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { generateWithGemini } from '../services/geminiService';
 import useTranslation from '../i18n/useTranslation2';
@@ -14,12 +14,6 @@ export default function GeminiSetupModal({ open, onClose }: { open: boolean; onC
     } catch { }
     return '';
   };
-  const maskKey = (k: string) => {
-    if (!k) return '';
-    if (k.length <= 8) return `${k.slice(0, 2)}...${k.slice(-2)}`;
-    return `${k.slice(0, 4)}...${k.slice(-4)}`;
-  };
-
   const initialKey = safeGetLocal(GEMINI_KEY_STORAGE);
   const [key, setKey] = useState<string>(initialKey || '');
   const [loading, setLoading] = useState(false);

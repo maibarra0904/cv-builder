@@ -37,10 +37,6 @@ const styles = StyleSheet.create({
   footerNote: { fontSize: 8, color: '#6b7280', marginTop: 18 }
 });
 
-const splitToParagraphs = (text: string) => {
-  if (!text) return [''];
-  return text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
-}
 
 const CoverLetterPdfViewer: React.FC<{ text: string }> = ({ text }) => {
   const { state } = useCV();
