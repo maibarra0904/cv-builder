@@ -1,11 +1,13 @@
 import { useCV } from '../../hooks/useCV';
 import { Camera, Upload } from 'lucide-react';
 import { useRef } from 'react';
+import useTranslation from '../../i18n/useTranslation';
 
 export function PersonalDataForm() {
   const { state, updatePersonalData } = useCV();
   const { personalData } = state.cvData;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   const handleInputChange = (field: keyof typeof personalData, value: string) => {
     updatePersonalData({ [field]: value });
@@ -54,7 +56,7 @@ export function PersonalDataForm() {
           className="hidden"
         />
         <p className="text-sm text-gray-500 text-center">
-          Haz clic en el ícono para subir tu foto
+          {t('forms.personal.photoHint')}
         </p>
       </div>
 
@@ -62,121 +64,121 @@ export function PersonalDataForm() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Nombre *
+            {t('forms.personal.firstName')}
           </label>
           <input
             type="text"
             value={personalData.firstName}
             onChange={(e) => handleInputChange('firstName', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Tu nombre"
+            placeholder={t('forms.personal.firstNamePlaceholder')}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Apellido *
+            {t('forms.personal.lastName')}
           </label>
           <input
             type="text"
             value={personalData.lastName}
             onChange={(e) => handleInputChange('lastName', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Tu apellido"
+            placeholder={t('forms.personal.lastNamePlaceholder')}
           />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Email *
+          {t('forms.personal.email')}
         </label>
         <input
           type="email"
           value={personalData.email}
           onChange={(e) => handleInputChange('email', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="tu@email.com"
+          placeholder={t('forms.personal.emailPlaceholder')}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Teléfono *
+          {t('forms.personal.phone')}
         </label>
         <input
           type="tel"
           value={personalData.phone}
           onChange={(e) => handleInputChange('phone', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="+1 234 567 8900"
+          placeholder={t('forms.personal.phonePlaceholder')}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Dirección
+          {t('forms.personal.address')}
         </label>
         <input
           type="text"
           value={personalData.address}
           onChange={(e) => handleInputChange('address', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Tu dirección"
+          placeholder={t('forms.personal.addressPlaceholder')}
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Ciudad
+            {t('forms.personal.city')}
           </label>
           <input
             type="text"
             value={personalData.city}
             onChange={(e) => handleInputChange('city', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Tu ciudad"
+            placeholder={t('forms.personal.cityPlaceholder')}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            País
+            {t('forms.personal.country')}
           </label>
           <input
             type="text"
             value={personalData.country}
             onChange={(e) => handleInputChange('country', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Tu país"
+            placeholder={t('forms.personal.countryPlaceholder')}
           />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          LinkedIn
+          {t('forms.personal.linkedIn')}
         </label>
         <input
           type="url"
           value={personalData.linkedIn || ''}
           onChange={(e) => handleInputChange('linkedIn', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="https://linkedin.com/in/tu-perfil"
+          placeholder={t('forms.personal.linkedInPlaceholder')}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Sitio Web
+          {t('forms.personal.website')}
         </label>
         <input
           type="url"
           value={personalData.website || ''}
           onChange={(e) => handleInputChange('website', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="https://tu-sitio-web.com"
+          placeholder={t('forms.personal.websitePlaceholder')}
         />
       </div>
     </div>

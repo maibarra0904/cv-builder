@@ -12,13 +12,18 @@ export function SectionToggle({ section }: Readonly<SectionToggleProps>) {
   const handleToggle = () => {
     // No permitir deshabilitar datos personales
     if (section === 'personalData') return;
-    
+    const newVisible = !isEnabled;
     updateSectionConfig({
       [section]: {
         ...state.sectionConfig[section],
-        visible: !isEnabled
+        visible: newVisible
       }
     });
+    if (newVisible === false) {
+      setTimeout(() => {
+        try { window.location.reload(); } catch (e) { /* ignore */ }
+      }, 220);
+    }
   };
 
   return (

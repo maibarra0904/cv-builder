@@ -3,12 +3,16 @@ import { useCV } from '../hooks/useCV';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Save, Download, Upload, HelpCircle, X, PlusCircle } from 'lucide-react';
 import Swal from 'sweetalert2';
+import useTranslation from '../i18n/useTranslation2';
+import { translations } from '../i18n/translations';
+import type { SupportedLanguage } from '../types/cv';
 
 export function DataManager() {
   const { state, loadCVData, updateSectionConfig, setTemplate, resetAll } = useCV();
   const { clearSavedData, hasSavedData } = useLocalStorage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showReadme, setShowReadme] = useState(false);
+  const { t, currentLanguage } = useTranslation();
 
   const handleLoadTestData = async () => {
     try {
@@ -249,7 +253,7 @@ export function DataManager() {
     <div className="bg-white rounded-lg border border-gray-200 p-4">
       <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
         <Save className="h-5 w-5 mr-2" />
-        Gestión de Datos
+        {t('dataManager.title', 'Gestión de Datos')}
       </h3>
       
       <div className="space-y-4">
@@ -257,7 +261,7 @@ export function DataManager() {
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-sm text-green-800">
-              {hasSavedData() ? 'Datos guardados automáticamente' : 'Sin datos guardados'}
+              {hasSavedData() ? t('dataManager.statusSaved', 'Datos guardados automáticamente') : t('dataManager.statusNone', 'Sin datos guardados')}
             </span>
           </div>
         </div>
@@ -269,7 +273,7 @@ export function DataManager() {
             className="w-full flex items-center justify-center space-x-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
           >
             <HelpCircle className="h-4 w-4" />
-            <span>Ver Instrucciones</span>
+            <span>{t('dataManager.viewInstructions', 'Ver Instrucciones')}</span>
           </button>
 
           {/* Subsección: Exportar e Importar */}
@@ -278,7 +282,7 @@ export function DataManager() {
               <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-xs">📦</span>
               </div>
-              <span>Exportar e Importar Datos</span>
+              <span>{t('dataManager.readme.exportImportTitle', 'Exportar e Importar Datos')}</span>
             </div>
 
             {/* Exportar datos */}
@@ -287,13 +291,13 @@ export function DataManager() {
               className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               <Upload className="h-4 w-4" />
-              <span>Exportar Respaldo JSON</span>
+              <span>{t('dataManager.exportBackup', 'Exportar Respaldo JSON')}</span>
             </button>
 
             {/* Importar datos */}
             <label className="w-full flex items-center justify-center space-x-2 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors cursor-pointer text-sm font-medium">
               <Download className="h-4 w-4" />
-              <span>Importar Respaldo JSON</span>
+              <span>{t('dataManager.importBackup', 'Importar Respaldo JSON')}</span>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -308,9 +312,9 @@ export function DataManager() {
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-semibold text-gray-700 border-b border-gray-200 pb-2">
               <div className="w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xs">🚀</span>
-              </div>
-              <span>Gestión de Contenido</span>
+                  <span className="text-white text-xs">🚀</span>
+                </div>
+                <span>{t('dataManager.infoTitle', 'Gestión de Contenido')}</span>
             </div>
 
             {/* Cargar datos de prueba */}
@@ -319,7 +323,7 @@ export function DataManager() {
               className="w-full flex items-center justify-center space-x-2 bg-yellow-600 text-white px-4 py-3 rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
             >
               <PlusCircle className="h-4 w-4" />
-              <span>Cargar Datos de Prueba</span>
+              <span>{t('dataManager.loadTestData', 'Cargar Datos de Prueba')}</span>
             </button>
 
             {/* Nuevo CV */}
@@ -328,21 +332,22 @@ export function DataManager() {
               className="w-full flex items-center justify-center space-x-2 bg-orange-600 text-white px-4 py-3 rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium"
             >
               <PlusCircle className="h-4 w-4" />
-              <span>Crear Nuevo CV</span>
+              <span>{t('dataManager.newCV', 'Crear Nuevo CV')}</span>
             </button>
           </div>
         </div>
 
         <div className="text-xs text-gray-500 space-y-2 mt-6 pt-4 border-t border-gray-200">
           <div className="space-y-1">
-            <p className="font-medium text-gray-700">Información:</p>
-            <p>• Los datos se guardan automáticamente en tu navegador</p>
-            <p>• "Ver Instrucciones" muestra ayuda detallada sobre todas las funciones</p>
-            <p>• "Exportar" crea un archivo JSON con todos los datos y foto</p>
-            <p>• "Importar" acepta archivos JSON y los guarda automáticamente</p>
-            <p>• "Cargar Datos de Prueba" llena el formulario con información de ejemplo</p>
-            <p>• "Crear Nuevo CV" limpia todos los datos para empezar de cero</p>
-            <p className="text-purple-600 font-medium">📖 Usa "Ver Instrucciones" para ayuda detallada</p>
+            <p className="font-medium text-gray-700">{t('dataManager.infoTitle', 'Información:')}</p>
+            {(() => {
+              type TranslationsType = typeof translations;
+              const locale = currentLanguage as SupportedLanguage;
+              const bullets = (translations as TranslationsType)[locale]?.dataManager?.bullets;
+              const list = Array.isArray(bullets) ? bullets : [];
+              return list.map((b: string, i: number) => (<p key={i}>• {b}</p>));
+            })()}
+            <p className="text-purple-600 font-medium">📖 {t('dataManager.viewInstructions', 'Ver Instrucciones')} {t('dataManager.readme.title', 'Instrucciones')}</p>
           </div>
         </div>
       </div>
@@ -367,7 +372,7 @@ export function DataManager() {
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden mx-4">
               {/* Header */}
               <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-200">
-                <h2 className="text-lg md:text-xl font-semibold text-gray-900">📖 Instrucciones</h2>
+                <h2 className="text-lg md:text-xl font-semibold text-gray-900">{t('dataManager.readme.title', '📖 Instrucciones')}</h2>
                 <button
                   onClick={() => setShowReadme(false)}
                   className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
@@ -380,16 +385,16 @@ export function DataManager() {
               <div className="p-4 md:p-6 overflow-y-auto max-h-[60vh]">
                 <div className="prose prose-sm max-w-none space-y-4">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
-                    <h3 className="text-base md:text-lg font-semibold text-blue-900 mb-2">🎯 Guía Completa de Uso</h3>
+                    <h3 className="text-base md:text-lg font-semibold text-blue-900 mb-2">{t('dataManager.readme.guideTitle', '🎯 Guía Completa de Uso')}</h3>
                     <p className="text-sm md:text-base text-blue-800">
-                      Aprende a usar todas las funciones disponibles en la gestión de datos de tu CV.
+                      {t('dataManager.readme.guideIntro', 'Aprende a usar todas las funciones disponibles en la gestión de datos de tu CV.')}
                     </p>
                   </div>
 
                   <div className="space-y-6">
                     {/* Sección Exportar e Importar */}
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <h3 className="text-base md:text-lg font-semibold text-green-900 mb-3">� Exportar e Importar Datos</h3>
+                      <h3 className="text-base md:text-lg font-semibold text-green-900 mb-3">{t('dataManager.readme.exportImportTitle', 'Exportar e Importar Datos')}</h3>
                       
                       <div className="space-y-4">
                         <div>

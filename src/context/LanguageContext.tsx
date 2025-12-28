@@ -14,7 +14,14 @@ export interface LanguageContextType {
 export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: Readonly<{ children: ReactNode }>) {
-  const [currentLanguage, setCurrentLanguage] = useState<'es' | 'en'>('es');
+  const [currentLanguage, setCurrentLanguage] = useState<'es' | 'en'>(() => {
+    try {
+      const stored = localStorage.getItem('language');
+      return (stored === 'en' || stored === 'es') ? (stored as 'es' | 'en') : 'es';
+    } catch {
+      return 'es';
+    }
+  });
   const [bilingualData, setBilingualDataState] = useState<BilingualContent<CVData> | null>(() => {
     try {
       const stored = localStorage.getItem('bilingualData');
@@ -35,6 +42,7 @@ export function LanguageProvider({ children }: Readonly<{ children: ReactNode }>
   }, [bilingualData, currentLanguage]);
 
   const setLanguage = useCallback((lang: 'es' | 'en') => {
+    try { localStorage.setItem('language', lang); } catch {console.error('Could not store language preference');};
     setCurrentLanguage(lang);
   }, []);
 

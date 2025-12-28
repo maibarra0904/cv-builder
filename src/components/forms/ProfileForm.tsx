@@ -1,8 +1,10 @@
 import { useCV } from '../../hooks/useCV';
+import useTranslation from '../../i18n/useTranslation';
 
 export function ProfileForm() {
   const { state, updateProfile } = useCV();
-  const { profile } = state.cvData;
+  const profile = state?.cvData?.profile ?? { summary: '' };
+  const { t } = useTranslation();
 
   const handleSummaryChange = (value: string) => {
     updateProfile({ summary: value });
@@ -12,17 +14,17 @@ export function ProfileForm() {
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Resumen Profesional
+          {t('forms.profile.title')}
         </label>
         <textarea
-          value={profile.summary}
+          value={profile.summary ?? ''}
           onChange={(e) => handleSummaryChange(e.target.value)}
           rows={6}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-          placeholder="Describe tu experiencia, habilidades y objetivos profesionales. Este es el primer texto que leerán los reclutadores, así que haz que sea impactante y conciso."
+          placeholder={t('forms.profile.placeholder')}
         />
         <p className="text-xs text-gray-500 mt-1">
-          Recomendado: 2-4 líneas que resuman tu experiencia y valor único
+          {t('forms.profile.tipsTitle')}: {Array.isArray(t('forms.profile.tips')) ? (t('forms.profile.tips') as string[])[0] : ''}
         </p>
       </div>
 

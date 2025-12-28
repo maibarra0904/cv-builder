@@ -63,26 +63,30 @@ const sectionIconsMap = {
   volunteers: Globe,
 } as const;
 
+import useTranslation from '../i18n/useTranslation2';
+
 const sectionLabels = {
-  personalData: 'Datos Personales',
-  profile: 'Perfil',
-  education: 'Educación',
-  experience: 'Experiencia',
-  skills: 'Habilidades',
-  languages: 'Idiomas',
-  hobbies: 'Pasatiempos',
-  certificates: 'Certificados',
-  courses: 'Cursos',
-  projects: 'Proyectos',
-  volunteers: 'Voluntariado',
+  personalData: 'personalData',
+  profile: 'profile',
+  education: 'education',
+  experience: 'experience',
+  skills: 'skills',
+  languages: 'languages',
+  hobbies: 'hobbies',
+  certificates: 'certificates',
+  courses: 'courses',
+  projects: 'projects',
+  volunteers: 'volunteers',
 } as const;
 
 // Definir secciones principales y secundarias
 const mainSections: (keyof SectionConfig)[] = ['personalData', 'profile', 'education', 'experience', 'skills'];
-const additionalSections: (keyof SectionConfig)[] = ['languages', 'certificates', 'courses', 'projects', 'hobbies', 'volunteers'];
+// 'languages' se puede incluir en 'skills' por lo que se retira de las secciones adicionales
+const additionalSections: (keyof SectionConfig)[] = ['certificates', 'courses', 'projects', 'hobbies', 'volunteers'];
 
 export function Sidebar() {
   const { state, updateSectionConfig, reorderSections } = useCV();
+  const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState<keyof SectionConfig>('personalData');
   const [showAdditionalSections, setShowAdditionalSections] = useState(false);
   const [showSectionReorder, setShowSectionReorder] = useState(false);
@@ -145,7 +149,7 @@ export function Sidebar() {
     };
 
     const IconComponent = sectionIconsMap[sectionKey];
-    const label = sectionLabels[sectionKey];
+    const label = t(`sections.${sectionLabels[sectionKey]}`);
 
     return (
       <div
@@ -175,14 +179,21 @@ export function Sidebar() {
             <span className="font-medium">{label}</span>
           </button>
           <button
-            onClick={() => 
-              updateSectionConfig({ 
+            onClick={() => {
+              const newVisible = !state.sectionConfig[sectionKey].visible;
+              updateSectionConfig({
                 [sectionKey]: {
                   ...state.sectionConfig[sectionKey],
-                  visible: !state.sectionConfig[sectionKey].visible 
+                  visible: newVisible
                 }
-              })
-            }
+              });
+              // Si el resultado es ocultar la sección, recargar para forzar actualización completa
+              if (newVisible === false) {
+                setTimeout(() => {
+                  try { window.location.reload(); } catch (e) { console.error(e); }
+                }, 220);
+              }
+            }}
             className="ml-2 p-1 rounded-md hover:bg-gray-100 transition-colors"
           >
             {state.sectionConfig[sectionKey].visible ? (
@@ -229,9 +240,9 @@ export function Sidebar() {
     <div className="h-full flex flex-col bg-gradient-to-b from-white via-gray-50/30 to-gray-100/20">
       {/* Section Navigation */}
       <div className="border-b border-gray-200/50 p-3 md:p-4 bg-gradient-to-r from-white to-gray-50/50">
-        <div className="flex items-center justify-between mb-3 md:mb-4">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
           <h2 className="text-base md:text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-            Secciones del CV
+            {t('ui.sectionsTitle')}
           </h2>
           <button
             onClick={() => setShowSectionReorder(!showSectionReorder)}
@@ -240,7 +251,7 @@ export function Sidebar() {
                 ? 'bg-purple-100 text-purple-700 border border-purple-200' 
                 : 'bg-white text-gray-600 border border-gray-200 hover:bg-purple-50'
             }`}
-            title={showSectionReorder ? 'Desactivar reordenamiento' : 'Activar reordenamiento'}
+            title={showSectionReorder ? t('ui.toggleReorderOn') : t('ui.toggleReorderOff')}
           >
             <ArrowUpDown className="h-4 w-4" />
           </button>
@@ -271,11 +282,11 @@ export function Sidebar() {
             
             {/* Separador y Botón para Más Secciones */}
             <div className="pt-3">
-              <button
+                <button
                 onClick={() => setShowAdditionalSections(!showAdditionalSections)}
                 className="w-full flex items-center justify-between px-2 md:px-3 py-2 text-left rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 text-gray-600 border border-gray-200/70 bg-white/80 backdrop-blur-sm shadow-sm"
               >
-                <span className="text-sm font-medium">Más Secciones</span>
+                <span className="text-sm font-medium">{t('ui.moreSections')}</span>
                 {showAdditionalSections ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
@@ -312,7 +323,7 @@ export function Sidebar() {
           {state.sectionConfig[activeSection].visible ? (
             <div>
               <h3 className="text-base md:text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3 md:mb-4">
-                {sectionLabels[activeSection]}
+                {t(`sections.${sectionLabels[activeSection]}`)}
               </h3>
               <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-gray-200/50">
                 {renderForm()}
@@ -324,7 +335,7 @@ export function Sidebar() {
                 {React.createElement(sectionIconsMap[activeSection], { size: 48, className: "mx-auto text-gray-300" })}
               </div>
               <p className="text-sm md:text-base text-gray-500">
-                Esta sección está deshabilitada. Actívala para comenzar a editarla.
+                {t('ui.sectionDisabled')}
               </p>
             </div>
           )}

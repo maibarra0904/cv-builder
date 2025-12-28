@@ -1,66 +1,30 @@
-import { useEffect } from 'react';
-import { useLanguage } from '../hooks/useLanguage';
-import { useCV } from '../hooks/useCV';
-import { useSimpleTranslation } from '../hooks/useSimpleTranslation';
+import React, { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import useTranslation from '../i18n/useTranslation2';
 
-export function LanguageSelector() {
-  const { currentLanguage, setCurrentLanguage, setBilingualData, bilingualData } = useLanguage();
-  const { state } = useCV();
-  const { translateCVData } = useSimpleTranslation();
+export default function LanguageSelector() {
+  const { currentLanguage, setLanguage} = useTranslation();
+  const [open, setOpen] = useState(false);
 
-  // Generar datos bilingües cuando cambian los datos del CV
-  useEffect(() => {
-    const generateBilingualData = async () => {
-      if (state.cvData.personalData.firstName && !bilingualData) {
-        try {
-          console.log('🔄 Generando datos bilingües...');
-          const translatedData = await translateCVData(state.cvData);
-          setBilingualData(translatedData);
-          console.log('✅ Datos bilingües generados');
-        } catch (error) {
-          console.error('❌ Error generando datos bilingües:', error);
-        }
-      }
-    };
-
-    generateBilingualData();
-  }, [state.cvData, setBilingualData, bilingualData, translateCVData]);
-
-  const handleLanguageChange = (language: 'es' | 'en') => {
-    console.log('🌐 Cambiando idioma a:', language);
-    setCurrentLanguage(language);
+  const toggle = () => setOpen(s => !s);
+  const choose = (lang: 'es' | 'en') => {
+    setLanguage(lang);
+    setOpen(false);
   };
 
   return (
-    <div className="flex items-center gap-2 p-2 bg-gray-100 rounded-lg">
-      <span className="text-sm font-medium text-gray-700">Idioma:</span>
-      <div className="flex bg-white rounded-md shadow-sm">
-        <button
-          onClick={() => handleLanguageChange('es')}
-          className={`px-3 py-1 text-sm font-medium rounded-l-md transition-colors ${
-            currentLanguage === 'es'
-              ? 'bg-blue-500 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          ES
-        </button>
-        <button
-          onClick={() => handleLanguageChange('en')}
-          className={`px-3 py-1 text-sm font-medium rounded-r-md transition-colors ${
-            currentLanguage === 'en'
-              ? 'bg-blue-500 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          EN
-        </button>
-      </div>
-      
-      {/* Debug info */}
-      <div className="ml-4 text-xs text-gray-500">
-        Actual: {currentLanguage} | Datos: {bilingualData ? '✅' : '❌'}
-      </div>
+    <div className="relative">
+      <button onClick={toggle} className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+        <span className="text-sm font-medium text-gray-700">{currentLanguage === 'es' ? 'ES' : 'EN'}</span>
+        <ChevronDown className="h-4 w-4 text-gray-500" />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 mt-2 w-36 bg-white border rounded shadow-lg z-50">
+          <button onClick={() => choose('es')} className={`w-full text-left px-3 py-2 hover:bg-gray-50 ${currentLanguage === 'es' ? 'font-semibold' : ''}`}>Español (ES)</button>
+          <button onClick={() => choose('en')} className={`w-full text-left px-3 py-2 hover:bg-gray-50 ${currentLanguage === 'en' ? 'font-semibold' : ''}`}>English (EN)</button>
+        </div>
+      )}
     </div>
   );
 }

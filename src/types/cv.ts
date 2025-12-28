@@ -35,6 +35,7 @@ export interface Education {
   current: boolean;
   description?: string;
   location?: string;
+  visible?: boolean;
 }
 
 export interface Experience {
@@ -47,6 +48,7 @@ export interface Experience {
   description: string;
   achievements?: string[];
   location?: string;
+  visible?: boolean;
 }
 
 export interface Skill {
@@ -54,18 +56,21 @@ export interface Skill {
   name: string;
   level: 1 | 2 | 3 | 4 | 5;
   category: 'technical' | 'soft' | 'language';
+  visible?: boolean;
 }
 
 export interface Language {
   id: string;
   name: string;
   level: 'Básico' | 'Intermedio' | 'Avanzado' | 'Nativo';
+  visible?: boolean;
 }
 
 export interface Hobby {
   id: string;
   name: string;
   description?: string;
+  visible?: boolean;
 }
 
 export interface Certificate {
@@ -74,6 +79,7 @@ export interface Certificate {
   issuer: string;
   date: string;
   url?: string;
+  visible?: boolean;
 }
 
 export interface Course {
@@ -84,6 +90,7 @@ export interface Course {
   date: string;
   description?: string;
   url?: string;
+  visible?: boolean;
 }
 
 export interface Project {
@@ -94,6 +101,7 @@ export interface Project {
   url?: string;
   startDate: string;
   endDate: string;
+  visible?: boolean;
 }
 
 export interface Volunteer {
@@ -104,6 +112,7 @@ export interface Volunteer {
   endDate: string;
   current: boolean;
   description: string;
+  visible?: boolean;
 }
 
 export interface CVData {
@@ -135,3 +144,16 @@ export interface SectionConfig {
 }
 
 export type CVTemplate = 'modern' | 'classic' | 'creative' | 'gradient';
+
+// Tipos para componentes/documentos PDF usados por react-pdf
+import type React from 'react';
+
+export type DocumentProps = {
+  data: CVData;
+  sectionConfig: SectionConfig;
+  language?: SupportedLanguage;
+};
+
+export type DocumentComponentType = React.FC<DocumentProps>;
+
+export type DocumentElement = React.ReactElement<DocumentProps>;

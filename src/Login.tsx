@@ -11,7 +11,6 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     const API_URL = import.meta.env.VITE_BACKEND_URL;
-    const PROJECT_ID = import.meta.env.VITE_PROJECT_ID;
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -28,12 +27,10 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
       // Guardar purchasedProjects en localStorage
       if (data.user && Array.isArray(data.user.purchasedProjects)) {
         localStorage.setItem('purchasedProjects', JSON.stringify(data.user.purchasedProjects));
-        // Validar acceso
-        if (!PROJECT_ID || !data.user.purchasedProjects.includes(PROJECT_ID)) {
-          window.location.href = '/no-access';
-          return;
-        }
       }
+      // Store user object locally for other components
+      try { localStorage.setItem('user', JSON.stringify(data.user || {})); } catch { console.log(error) }
+      if (!data.token) throw new Error('Token no recibido');
       onLogin(data.token);
     } catch (err) {
       if (err instanceof Error) {

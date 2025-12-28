@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useCV } from '../../hooks/useCV';
+import useTranslation from '../../i18n/useTranslation';
 import { Plus, X, Heart } from 'lucide-react';
 
 export function HobbiesForm() {
   const { state, updateHobbies } = useCV();
   const { hobbies } = state.cvData;
+  const { t } = useTranslation();
   const [newHobby, setNewHobby] = useState('');
 
   const addHobby = () => {
@@ -35,14 +37,14 @@ export function HobbiesForm() {
           onChange={(e) => setNewHobby(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && addHobby()}
           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Agregar pasatiempo..."
+          placeholder={t('forms.hobbies.addPlaceholder') as string}
         />
         <button
           onClick={addHobby}
           className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="h-4 w-4" />
-          <span>Agregar</span>
+          <span>{t('forms.hobbies.addButton')}</span>
         </button>
       </div>
 
@@ -67,8 +69,8 @@ export function HobbiesForm() {
       {hobbies.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <Heart className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-          <p>No has agregado pasatiempos aún</p>
-          <p className="text-sm">Agrega tus intereses y actividades favoritas</p>
+          <p>{t('forms.hobbies.emptyTitle')}</p>
+          <p className="text-sm">{t('forms.hobbies.emptyHint')}</p>
         </div>
       )}
     </div>

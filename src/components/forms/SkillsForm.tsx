@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCV } from '../../hooks/useCV';
+import useTranslation from '../../i18n/useTranslation';
 import { Plus, X, Star, GripVertical } from 'lucide-react';
 import {
   DndContext,
@@ -136,6 +137,8 @@ export function SkillsForm() {
     })
   );
 
+  const { t } = useTranslation();
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -194,38 +197,38 @@ export function SkillsForm() {
     <div className="space-y-6">
       {/* Add new skill */}
       <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-        <h4 className="font-medium text-gray-900">Agregar nueva competencia</h4>
+        <h4 className="font-medium text-gray-900">{t('forms.skills.addNew')}</h4>
         
         <div className="space-y-3">
-          <input
+            <input
             type="text"
             value={newSkill.name}
             onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Nombre de la competencia"
+            placeholder={t('forms.skills.namePlaceholder') as string}
           />
           
           <div className="flex items-center space-x-4">
-            <select
+              <select
               value={newSkill.category}
               onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value as SkillCategory })}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="technical">Técnica</option>
-              <option value="soft">Blanda</option>
-              <option value="language">Idioma</option>
+              <option value="technical">{t('forms.skills.categories.technical')}</option>
+              <option value="soft">{t('forms.skills.categories.soft')}</option>
+              <option value="language">{t('forms.skills.categories.language')}</option>
             </select>
             
             <div className="flex items-center space-x-1">
               {renderStars(newSkill.level, undefined, (level) => setNewSkill({ ...newSkill, level }))}
             </div>
             
-            <button
+              <button
               onClick={addSkill}
               className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus className="h-4 w-4" />
-              <span>Agregar</span>
+              <span>{t('forms.skills.add')}</span>
             </button>
           </div>
         </div>
@@ -234,9 +237,9 @@ export function SkillsForm() {
       {/* Skills by category */}
       {Object.entries(skillsByCategory).map(([category, categorySkills]) => {
         const categoryNames = {
-          technical: 'Competencias Técnicas',
-          soft: 'Habilidades Blandas',
-          language: 'Idiomas',
+          technical: t('forms.skills.categoriesTitles.technical') as string,
+          soft: t('forms.skills.categoriesTitles.soft') as string,
+          language: t('forms.skills.categoriesTitles.language') as string,
         };
 
         if (categorySkills.length === 0) return null;
@@ -271,8 +274,8 @@ export function SkillsForm() {
       {skills.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <Star className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-          <p>No has agregado competencias aún</p>
-          <p className="text-sm">Agrega tus habilidades técnicas y blandas</p>
+          <p>{t('forms.skills.noSkills')}</p>
+          <p className="text-sm">{t('forms.skills.noSkillsHint')}</p>
         </div>
       )}
     </div>

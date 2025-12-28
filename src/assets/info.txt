@@ -1,0 +1,27 @@
+{
+  "name": "Info-Vitae",
+  "description": "Info-Vitae es una aplicación web innovadora que te permite crear una infografía visual y profesional de tu currículum vitae. Convierte tu experiencia, habilidades y logros en un documento atractivo, fácil de personalizar y exportar. Ideal para destacar en procesos de selección, ferias laborales o redes profesionales.",
+  "shortDescription": "Crea tu CV como una infografía visual, moderna y profesional en minutos.",
+  "price": 10,
+  "currency": "USD",
+  "originalPrice": 0,
+  "mainImage": "https://infovitae.app/assets/infovitae-preview.png",
+  "screenshots": [
+    "https://infovitae.app/assets/infovitae-screenshot1.png",
+    "https://infovitae.app/assets/infovitae-screenshot2.png"
+  ],
+  "videoUrl": "https://www.youtube.com/watch?v=infovitae-demo",
+  "category": "EDUCATION",
+  "tags": [
+    "cv", "infografía", "curriculum", "empleo", "visual", "profesional", "pdf", "plantillas"
+  ],
+  "targetAudience": "Estudiantes, profesionales, freelancers y cualquier persona que desee destacar su perfil profesional de manera visual y moderna.",
+  "demoUrl": "https://infovitae.app/demo",
+  "documentationUrl": "https://infovitae.app/docs",
+  "sourceCodeUrl": "https://github.com/maibarra0904/info-vitae",
+  "supportEmail": "soporte@infovitae.app",
+  "keywords": [
+    "cv", "curriculum", "infografía", "empleo", "visual", "editor", "plantillas", "pdf", "exportar", "profesional", "moderno"
+  ]
+}
+https://drive.google.com/open?id=1zbNg6iaBvA4uPcWNIOOL8j8yi74QRjlY&usp=drive_fs

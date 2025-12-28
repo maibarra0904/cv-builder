@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useCV } from '../../hooks/useCV';
+import useTranslation from '../../i18n/useTranslation';
 import { Plus, X, Folder, Calendar, ExternalLink } from 'lucide-react';
 
 export function ProjectsForm() {
   const { state, updateProjects } = useCV();
   const { projects } = state.cvData;
+  const { t } = useTranslation();
   const [isAdding, setIsAdding] = useState(false);
   const [newProject, setNewProject] = useState({
     name: '',
@@ -49,7 +51,7 @@ export function ProjectsForm() {
           className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="h-5 w-5" />
-          <span>Agregar Proyecto</span>
+          <span>{t('forms.projects.add')}</span>
         </button>
       )}
 
@@ -58,8 +60,8 @@ export function ProjectsForm() {
         <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-4">
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <label htmlFor="project-name" className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre del Proyecto *
+                <label htmlFor="project-name" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('forms.projects.namePlaceholder')}
               </label>
               <input
                 id="project-name"
@@ -67,25 +69,25 @@ export function ProjectsForm() {
                 value={newProject.name}
                 onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="ej. E-commerce App"
+                placeholder={t('forms.projects.namePlaceholder') as string}
               />
             </div>
             <div>
               <label htmlFor="project-description" className="block text-sm font-medium text-gray-700 mb-1">
                 Descripción *
               </label>
-              <textarea
+                <textarea
                 id="project-description"
                 value={newProject.description}
                 onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Describe el proyecto, sus objetivos y logros..."
+                placeholder={t('forms.projects.descriptionPlaceholder') as string}
               />
             </div>
             <div>
-              <label htmlFor="project-technologies" className="block text-sm font-medium text-gray-700 mb-1">
-                Tecnologías Utilizadas
+                <label htmlFor="project-technologies" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('forms.projects.technologiesPlaceholder')}
               </label>
               <input
                 id="project-technologies"
@@ -93,13 +95,13 @@ export function ProjectsForm() {
                 value={newProject.technologies}
                 onChange={(e) => setNewProject({ ...newProject, technologies: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="React, Node.js, MongoDB (separadas por comas)"
+                placeholder={t('forms.projects.technologiesPlaceholder') as string}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="project-start" className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha de Inicio
+                  {t('forms.projects.startDatePlaceholder')}
                 </label>
                 <input
                   id="project-start"
@@ -111,7 +113,7 @@ export function ProjectsForm() {
               </div>
               <div>
                 <label htmlFor="project-end" className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha de Finalización
+                  {t('forms.projects.endDatePlaceholder')}
                 </label>
                 <input
                   id="project-end"
@@ -125,7 +127,7 @@ export function ProjectsForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="project-url" className="block text-sm font-medium text-gray-700 mb-1">
-                  URL del Proyecto
+                  {t('forms.projects.urlPlaceholder')}
                 </label>
                 <input
                   id="project-url"
@@ -139,17 +141,17 @@ export function ProjectsForm() {
             </div>
           </div>
           <div className="flex space-x-3">
-            <button
+                  <button
               onClick={addProject}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Guardar
+              {t('forms.projects.save')}
             </button>
             <button
               onClick={() => setIsAdding(false)}
               className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
             >
-              Cancelar
+              {t('forms.projects.cancel')}
             </button>
           </div>
         </div>
@@ -199,7 +201,7 @@ export function ProjectsForm() {
                         className="flex items-center space-x-1 text-sm text-blue-600 hover:text-blue-800"
                       >
                         <ExternalLink className="h-4 w-4" />
-                        <span>Ver proyecto</span>
+                        <span>{t('forms.projects.viewProject')}</span>
                       </a>
                     )}
                   </div>
@@ -219,8 +221,8 @@ export function ProjectsForm() {
       {projects.length === 0 && !isAdding && (
         <div className="text-center py-8 text-gray-500">
           <Folder className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-          <p>No has agregado proyectos aún</p>
-          <p className="text-sm">Muestra tus trabajos y proyectos destacados</p>
+          <p>{t('forms.projects.emptyTitle')}</p>
+          <p className="text-sm">{t('forms.projects.emptyHint')}</p>
         </div>
       )}
     </div>

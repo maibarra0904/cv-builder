@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCV } from '../../hooks/useCV';
+import useTranslation from '../../i18n/useTranslation';
 import { Plus, X, GripVertical, Globe } from 'lucide-react';
 import {
   DndContext,
@@ -126,6 +127,7 @@ export function LanguagesForm() {
     name: '',
     level: 'Básico',
   });
+  const { t } = useTranslation();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -185,7 +187,7 @@ export function LanguagesForm() {
       <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-4">
         <div className="flex items-center mb-3">
           <Globe className="h-5 w-5 text-gray-400 mr-2" />
-          <h4 className="text-sm font-medium text-gray-700">Agregar Idioma</h4>
+          <h4 className="text-sm font-medium text-gray-700">{t('forms.languages.add')}</h4>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -194,7 +196,7 @@ export function LanguagesForm() {
             value={newLanguage.name}
             onChange={(e) => setNewLanguage({ ...newLanguage, name: e.target.value })}
             onKeyDown={handleKeyPress}
-            placeholder="Nombre del idioma"
+            placeholder={t('forms.languages.namePlaceholder') as string}
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
           
@@ -203,10 +205,10 @@ export function LanguagesForm() {
             onChange={(e) => setNewLanguage({ ...newLanguage, level: e.target.value as LanguageLevel })}
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           >
-            <option value="Básico">Básico</option>
-            <option value="Intermedio">Intermedio</option>
-            <option value="Avanzado">Avanzado</option>
-            <option value="Nativo">Nativo</option>
+            <option value="Básico">{t('forms.languages.levels.basic') as string}</option>
+            <option value="Intermedio">{t('forms.languages.levels.intermediate') as string}</option>
+            <option value="Avanzado">{t('forms.languages.levels.advanced') as string}</option>
+            <option value="Nativo">{t('forms.languages.levels.native') as string}</option>
           </select>
         </div>
         
@@ -216,7 +218,7 @@ export function LanguagesForm() {
           className="mt-3 flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm transition-colors"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Agregar Idioma
+          {t('forms.languages.add')}
         </button>
       </div>
 
@@ -224,7 +226,7 @@ export function LanguagesForm() {
       {state.cvData.languages.length > 0 && (
         <div>
           <h4 className="text-sm font-medium text-gray-700 mb-3">
-            Idiomas ({state.cvData.languages.length})
+            {t('sections.languages')} ({state.cvData.languages.length})
           </h4>
           <DndContext
             sensors={sensors}
@@ -251,9 +253,9 @@ export function LanguagesForm() {
       {state.cvData.languages.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <Globe className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-          <p className="text-sm">No hay idiomas agregados</p>
+          <p className="text-sm">{t('forms.languages.emptyTitle')}</p>
           <p className="text-xs text-gray-400 mt-1">
-            Agrega los idiomas que dominas para enriquecer tu CV
+            {t('forms.languages.emptyHint')}
           </p>
         </div>
       )}

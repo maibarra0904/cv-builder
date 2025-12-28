@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCV } from '../../hooks/useCV';
+import useTranslation from '../../i18n/useTranslation';
 import { Plus, Edit2, Trash2, GraduationCap, GripVertical } from 'lucide-react';
 import type { Education } from '../../types/cv';
 import {
@@ -111,6 +112,8 @@ export function EducationForm() {
     })
   );
 
+  const { t } = useTranslation();
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -174,26 +177,26 @@ export function EducationForm() {
           className="w-full flex items-center justify-center space-x-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors"
         >
           <Plus className="h-5 w-5" />
-          <span>Agregar Formación</span>
+          <span>{t('forms.education.add')}</span>
         </button>
       )}
 
       {isAdding && (
         <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg space-y-4">
           <h4 className="font-medium text-gray-900">
-            {editingId ? 'Editar Formación' : 'Nueva Formación'}
+            {editingId ? t('forms.education.edit') : t('forms.education.new')}
           </h4>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Institución *
+              {t('forms.education.institution')}
             </label>
             <input
               type="text"
               value={formData.institution}
               onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Universidad, colegio, instituto..."
+              placeholder={t('forms.education.institutionPlaceholder') as string}
               required
             />
           </div>
@@ -201,49 +204,49 @@ export function EducationForm() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Título *
+                {t('forms.education.degree')}
               </label>
               <input
                 type="text"
                 value={formData.degree}
                 onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Licenciatura, Maestría, etc."
+                placeholder={t('forms.education.degreePlaceholder') as string}
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Campo de estudio
+                {t('forms.education.field')}
               </label>
               <input
                 type="text"
                 value={formData.field}
                 onChange={(e) => setFormData({ ...formData, field: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Ingeniería, Medicina, etc."
+                placeholder={t('forms.education.fieldPlaceholder') as string}
               />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Localidad
+              {t('forms.education.location')}
             </label>
             <input
               type="text"
               value={formData.location || ''}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Ciudad, País"
+              placeholder={t('forms.education.location') as string}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Fecha de inicio
+                {t('forms.education.startDate')}
               </label>
               <input
                 type="month"
@@ -255,7 +258,7 @@ export function EducationForm() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Fecha de graduación
+                {t('forms.education.endDate')}
               </label>
               <input
                 type="month"
@@ -276,7 +279,7 @@ export function EducationForm() {
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="current-study" className="ml-2 text-sm text-gray-700">
-              Estudiando actualmente
+              {t('forms.education.studying')}
             </label>
           </div>
 
@@ -285,14 +288,14 @@ export function EducationForm() {
               type="submit"
               className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              {editingId ? 'Actualizar' : 'Agregar'}
+              {editingId ? t('forms.education.submitUpdate') : t('forms.education.submitAdd')}
             </button>
             <button
               type="button"
               onClick={resetForm}
               className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Cancelar
+              {t('forms.education.cancel')}
             </button>
           </div>
         </form>
@@ -320,8 +323,8 @@ export function EducationForm() {
       {education.length === 0 && !isAdding && (
         <div className="text-center py-8 text-gray-500">
           <GraduationCap className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-          <p>No has agregado formación académica aún</p>
-          <p className="text-sm">Haz clic en "Agregar Formación" para comenzar</p>
+          <p>{t('forms.education.emptyTitle')}</p>
+          <p className="text-sm">{t('forms.education.emptyHint')}</p>
         </div>
       )}
     </div>
