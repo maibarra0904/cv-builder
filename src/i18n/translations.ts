@@ -26,6 +26,7 @@ export const translations = {
     messages: {
       translating: 'Traduciendo...',
       generating: 'Generando...',
+      reloadPreview: 'Recargar vista',
       dataLoaded: 'Datos cargados',
       exporting: 'Exportando...'
     }
@@ -379,6 +380,7 @@ export const translations = {
     messages: {
       translating: 'Translating...',
       generating: 'Generating...',
+      reloadPreview: 'Reload preview',
       dataLoaded: 'Data loaded',
       exporting: 'Exporting...'
     }

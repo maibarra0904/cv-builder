@@ -15,7 +15,46 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
   const [debouncedData, setDebouncedData] = useState<{ data: CVData; sectionConfig: SectionConfig }>({ data, sectionConfig: state.sectionConfig });
   const debounceTimer = useRef<number | null>(null);
 
-  const { currentLanguage } = useTranslation();
+  const { t, currentLanguage } = useTranslation();
+
+  // key used to force remount PDFViewer when reload is requested
+  const [previewKey, setPreviewKey] = useState(0);
+
+  class PdfErrorBoundary extends React.Component<{
+    onReload: () => void;
+    children?: React.ReactNode;
+  }, { hasError: boolean }> {
+    constructor(props: any) {
+      super(props);
+      this.state = { hasError: false };
+    }
+    static getDerivedStateFromError() {
+      return { hasError: true };
+    }
+    componentDidCatch(error: unknown) {
+      console.warn('PdfErrorBoundary caught error', error);
+    }
+    render() {
+      if (this.state.hasError) {
+        return (
+          <div className="w-full h-full flex items-center justify-center">
+            <button
+              onClick={() => { this.setState({ hasError: false }); this.props.onReload(); }}
+              title={t('messages.reloadPreview', 'Reload preview')}
+              aria-label={t('messages.reloadPreview', 'Reload preview')}
+              className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4 4a8 8 0 111.707 5.293l-.853-.854A6 6 0 1010 4V1l4 4-4 4V6a8 8 0 01-6-2z" clipRule="evenodd" />
+              </svg>
+              <span className="hidden sm:inline">{t('messages.reloadPreview', 'Reload preview')}</span>
+            </button>
+          </div>
+        );
+      }
+      return this.props.children as React.ReactElement;
+    }
+  }
 
   const DocumentComponent = useMemo<DocumentElement | null>(() => {
     const targetData = debouncedData.data;
@@ -70,11 +109,15 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
     <div className="w-full h-full">
       <div style={{ height: '100%', width: '100%' }}>
         {DocumentComponent ? (
-          <PDFViewer style={{ width: '100%', height: '100%' }}>
-            {DocumentComponent}
-          </PDFViewer>
+          <PdfErrorBoundary onReload={() => setPreviewKey(k => k + 1)}>
+            <div key={previewKey} style={{ width: '100%', height: '100%' }}>
+              <PDFViewer style={{ width: '100%', height: '100%' }}>
+                {DocumentComponent}
+              </PDFViewer>
+            </div>
+          </PdfErrorBoundary>
         ) : (
-          <div style={{ width: '100%', height: '100%' }} className="flex items-center justify-center text-gray-600">Generando documento...</div>
+          <div style={{ width: '100%', height: '100%' }} className="flex items-center justify-center text-gray-600">{t('messages.generating', 'Generando documento...')}</div>
         )}
       </div>
       <div className="mt-2 flex gap-2">
