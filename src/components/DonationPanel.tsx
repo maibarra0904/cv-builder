@@ -20,7 +20,7 @@ const DonationPanel: React.FC<Props> = ({ open, onClose }) => {
       <div className={`fixed top-0 right-0 w-full sm:w-80 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-md border-l border-gray-200/50 h-[calc(100vh-104px)] overflow-y-auto transform transition-transform duration-300 z-20 shadow-2xl ${open ? 'translate-x-0' : 'translate-x-full'}`} style={{ top: '104px' }}>
         <div className="p-4 bg-gradient-to-b from-white/80 to-gray-50/80 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{t('donation.title', 'Donar')}</h2>
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{t('donation.title', 'Aporte voluntario')}</h2>
             <button
               onClick={onClose}
               className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
@@ -32,7 +32,7 @@ const DonationPanel: React.FC<Props> = ({ open, onClose }) => {
           </div>
 
           <div className="space-y-4">
-            <p className="text-sm text-gray-600">{t('donation.description', 'Esta aplicación se mantiene gracias a aportes voluntarios. Puedes donar con PayPal.')}</p>
+            <p className="text-sm text-gray-600">{t('donation.description', 'Esta aplicación se mantiene gracias a aportes voluntarios. Puedes realizar un aporte voluntario con PayPal.')}</p>
             <div className="flex items-center gap-4">
               <input
                 type="number"
@@ -44,7 +44,7 @@ const DonationPanel: React.FC<Props> = ({ open, onClose }) => {
               />
               <div className="text-sm text-gray-500">{t('donation.currencyLabel', 'USD')}</div>
             </div>
-            <p className="text-sm text-gray-600">{t('donation.donateHint', 'Puedes disminuir o aumentar tu aportación según consideres. Recuerda que en PayPal puedes ingresar tu tarjeta de crédito de forma segura.')}</p>
+            <p className="text-sm text-gray-600">{t('donation.donateHint', 'Puedes disminuir o aumentar el monto de tu aporte voluntario según consideres. Recuerda que en PayPal puedes ingresar tu tarjeta de crédito de forma segura.')}</p>
 
             {paypalClientId ? (
               <PayPalScriptProvider options={{ 'client-id': paypalClientId, clientId: paypalClientId, intent: 'capture', currency: 'USD' }}>
@@ -88,7 +88,7 @@ const DonationPanel: React.FC<Props> = ({ open, onClose }) => {
           className="fixed inset-0 bg-gradient-to-br from-black/40 via-slate-900/30 to-black/40 backdrop-blur-sm z-10 cursor-pointer border-0 p-0"
           style={{ top: '104px' }}
           onClick={onClose}
-          aria-label={t('donation.title', 'Donar')}
+          aria-label={t('donation.title', 'Aporte voluntario')}
         />
       )}
     </>

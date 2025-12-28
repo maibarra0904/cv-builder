@@ -120,11 +120,11 @@ export const translations = {
       lastUpdated: 'Última actualización: 2025-12-27'
     },
     donation: {
-      title: 'Donar',
-      description: 'Esta aplicación se mantiene gracias a aportes voluntarios. Puedes donar con PayPal.',
+      title: 'Aporte voluntario',
+      description: 'Esta aplicación se mantiene gracias a aportes voluntarios. Puedes realizar un aporte voluntario con PayPal.',
       currencyLabel: 'USD',
-      paypalNotConfigured: 'PayPal no configurado en el entorno. Puedes donar enviando un email a soporte o usar un enlace externo.',
-      donateHint: 'Puedes disminuir o aumentar tu aportación según consideres. Recuerda que en Paypal puedes ingresar tu tarjeta de crédito de forma segura.'
+      paypalNotConfigured: 'PayPal no configurado en el entorno. Puedes realizar un aporte voluntario enviando un email a soporte o usar un enlace externo.',
+      donateHint: 'Puedes disminuir o aumentar el monto de tu aporte voluntario según consideres. Recuerda que en PayPal puedes ingresar tu tarjeta de crédito de forma segura.'
     }
     ,
     ui: {
@@ -134,7 +134,7 @@ export const translations = {
       toggleReorderOn: 'Desactivar reordenamiento',
       toggleReorderOff: 'Activar reordenamiento',
       logout: 'Cerrar sesión',
-      donate: 'Donar',
+      donate: 'Aportar',
       dataPolicy: 'Política de datos'
     }
     ,
@@ -639,11 +639,11 @@ export const translations = {
       lastUpdated: 'Last updated: 2025-12-27'
     },
     donation: {
-      title: 'Donate',
-      description: 'This app is maintained thanks to voluntary contributions. You can donate via PayPal.',
+      title: 'Voluntary contribution',
+      description: 'This app is maintained thanks to voluntary contributions. You can make a voluntary contribution via PayPal.',
       currencyLabel: 'USD',
-      paypalNotConfigured: 'PayPal not configured in the environment. You can donate by sending an email to support or using an external link.',
-      donateHint: 'You can decrease or increase your contribution as you see fit. Remember that on PayPal you can securely enter your credit card.'
+      paypalNotConfigured: 'PayPal not configured in the environment. You can make a voluntary contribution by sending an email to support or using an external link.',
+      donateHint: 'You can decrease or increase the amount of your voluntary contribution as you see fit. Remember that on PayPal you can securely enter your credit card.'
     }
   }
 };
