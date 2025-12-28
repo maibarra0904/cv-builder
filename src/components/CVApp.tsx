@@ -289,14 +289,14 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
           <>
             <button
               onClick={handleToggleTemplateSelector}
-              className="flex items-center space-x-1 md:space-x-2 px-3 md:px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-700/30 hover:scale-105 text-sm md:text-base font-medium backdrop-blur-sm"
+              className="flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-1.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-700/30 hover:scale-105 text-xs md:text-sm font-medium backdrop-blur-sm"
             >
               <Settings className="h-4 w-4" />
               <span className="hidden sm:inline">{t('navigation.templates')}</span>
             </button>
             <button
               onClick={handleToggleDataManager}
-              className="flex items-center space-x-1 md:space-x-2 px-3 md:px-5 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg shadow-purple-600/25 hover:shadow-purple-700/30 hover:scale-105 text-sm md:text-base font-medium backdrop-blur-sm"
+              className="flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg shadow-purple-600/25 hover:shadow-purple-700/30 hover:scale-105 text-xs md:text-sm font-medium backdrop-blur-sm"
             >
               <Database className="h-4 w-4" />
               <span className="hidden sm:inline">{t('navigation.data')}</span>
@@ -305,7 +305,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
         )}
         <button
           onClick={handleToggleModeSelector}
-          className="flex items-center space-x-1 md:space-x-2 px-3 md:px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-all duration-200 shadow-lg shadow-indigo-600/25 hover:shadow-indigo-700/30 hover:scale-105 text-sm md:text-base font-medium backdrop-blur-sm"
+          className="flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-all duration-200 shadow-lg shadow-indigo-600/25 hover:shadow-indigo-700/30 hover:scale-105 text-xs md:text-sm font-medium backdrop-blur-sm"
           title={t('navigation.mode', 'Modo')}
         >
           <FileText className="h-4 w-4" />
@@ -314,7 +314,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
         </button>
         <button
           onClick={handleToggleDataPolicy}
-          className="flex items-center space-x-1 md:space-x-2 px-3 md:px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg shadow-green-600/25 hover:shadow-green-700/30 hover:scale-105 text-sm md:text-base font-medium backdrop-blur-sm"
+          className="flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-1.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg shadow-green-600/25 hover:shadow-green-700/30 hover:scale-105 text-xs md:text-sm font-medium backdrop-blur-sm"
           title={t('ui.dataPolicy')}
         >
           <FileText className="h-4 w-4 text-white" />
@@ -322,7 +322,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
         </button>
         <button
           onClick={handleToggleDonation}
-          className="flex items-center space-x-1 md:space-x-2 px-3 md:px-5 py-2.5 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-all duration-200 shadow-lg shadow-yellow-400/25 hover:shadow-yellow-500/30 hover:scale-105 text-sm md:text-base font-medium"
+          className="flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-all duration-200 shadow-lg shadow-yellow-400/25 hover:shadow-yellow-500/30 hover:scale-105 text-xs md:text-sm font-medium"
           title={t('ui.donate')}
         >
           <img src={premiumIcon} alt="Premium" className="h-4 w-4" />
@@ -335,7 +335,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
 
         <button
           onClick={onLogout}
-          className="flex items-center space-x-1 md:space-x-2 px-3 md:px-5 py-2.5 bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-lg hover:from-gray-500 hover:to-gray-700 transition-all duration-200 shadow-lg shadow-gray-400/25 hover:shadow-gray-700/30 hover:scale-105 text-sm md:text-base font-medium backdrop-blur-sm"
+          className="flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-1.5 bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-lg hover:from-gray-500 hover:to-gray-700 transition-all duration-200 shadow-lg shadow-gray-400/25 hover:shadow-gray-700/30 hover:scale-105 text-xs md:text-sm font-medium backdrop-blur-sm"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" /></svg>
           <span className="hidden sm:inline">{t('ui.logout')}</span>
