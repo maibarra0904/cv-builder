@@ -101,82 +101,63 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
     );
   }
 
-  const handleToggleTemplateSelector = () => {
-    if (showTemplateSelector) {
-      // Cerrar el modal de plantillas
+  // Central panel opener: cierra los paneles abiertos y abre el solicitado
+  const openPanel = (panel: 'template' | 'data' | 'mode' | 'policy' | 'donation') => {
+    // Helper para cerrar template/mode con su animación
+    const closeTemplate = () => {
       setIsTemplateSelectorVisible(false);
       setTimeout(() => setShowTemplateSelector(false), 300);
-    } else {
-      // Si el modal de datos está abierto, cerrarlo primero
-      if (showDataManager) {
-        setShowDataManager(false);
-        // Pequeño delay para que se vea la transición
-        setTimeout(() => {
-          setShowTemplateSelector(true);
-          setTimeout(() => setIsTemplateSelectorVisible(true), 10);
-        }, 150);
-      } else {
-        // Abrir directamente si no hay otro modal abierto
-        setShowTemplateSelector(true);
-        setTimeout(() => setIsTemplateSelectorVisible(true), 10);
-      }
+    };
+    const closeMode = () => {
+      setIsModeSelectorVisible(false);
+      setTimeout(() => setShowModeSelector(false), 300);
+    };
+
+    // Si ya está abierto, lo cerramos (toggle)
+    if (panel === 'template' && showTemplateSelector) {
+      closeTemplate();
+      return;
+    }
+    if (panel === 'data' && showDataManager) { setShowDataManager(false); return; }
+    if (panel === 'mode' && showModeSelector) { closeMode(); return; }
+    if (panel === 'policy' && showDataPolicy) { setShowDataPolicy(false); return; }
+    if (panel === 'donation' && showDonationModal) { setShowDonationModal(false); return; }
+
+    // Cerrar todos los paneles antes de abrir el solicitado
+    // Cerrar data manager
+    if (showDataManager) setShowDataManager(false);
+    // Cerrar data policy
+    if (showDataPolicy) setShowDataPolicy(false);
+    // Cerrar donation
+    if (showDonationModal) setShowDonationModal(false);
+    // Cerrar template/mode con su animación
+    if (showTemplateSelector) closeTemplate();
+    if (showModeSelector) closeMode();
+
+    // Abrir el panel solicitado con pequeños delays para mantener transiciones
+    if (panel === 'template') {
+      setShowTemplateSelector(true);
+      setTimeout(() => setIsTemplateSelectorVisible(true), 10);
+    } else if (panel === 'data') {
+      // abrir directamente
+      setShowDataManager(true);
+    } else if (panel === 'mode') {
+      setShowModeSelector(true);
+      setTimeout(() => setIsModeSelectorVisible(true), 10);
+    } else if (panel === 'policy') {
+      // dar tiempo si cerramos algo grande previamente
+      setTimeout(() => setShowDataPolicy(true), 150);
+    } else if (panel === 'donation') {
+      setTimeout(() => setShowDonationModal(true), 150);
     }
   };
 
-  const handleToggleDataManager = () => {
-    if (showDataManager) {
-      // Cerrar el modal de datos
-      setShowDataManager(false);
-    } else {
-      // Si el modal de plantillas está abierto, cerrarlo primero
-      if (showTemplateSelector) {
-        setIsTemplateSelectorVisible(false);
-        setTimeout(() => setShowTemplateSelector(false), 300);
-        // Pequeño delay para que se vea la transición
-        setTimeout(() => {
-          setShowDataManager(true);
-        }, 150);
-      } else {
-        // Abrir directamente si no hay otro modal abierto
-        setShowDataManager(true);
-      }
-    }
-  };
-
-  const handleToggleDataPolicy = () => {
-    if (showDataPolicy) {
-      setShowDataPolicy(false);
-    } else {
-      // if other panels open, close them first to keep transitions suaves
-      if (showDataManager) {
-        setShowDataManager(false);
-        setTimeout(() => setShowDataPolicy(true), 150);
-      } else if (showTemplateSelector) {
-        setIsTemplateSelectorVisible(false);
-        setTimeout(() => setShowTemplateSelector(false), 300);
-        setTimeout(() => setShowDataPolicy(true), 150);
-      } else {
-        setShowDataPolicy(true);
-      }
-    }
-  };
-
-  const handleToggleDonation = () => {
-    if (showDonationModal) {
-      setShowDonationModal(false);
-    } else {
-      if (showDataManager) {
-        setShowDataManager(false);
-        setTimeout(() => setShowDonationModal(true), 150);
-      } else if (showTemplateSelector) {
-        setIsTemplateSelectorVisible(false);
-        setTimeout(() => setShowTemplateSelector(false), 300);
-        setTimeout(() => setShowDonationModal(true), 150);
-      } else {
-        setShowDonationModal(true);
-      }
-    }
-  };
+  // Wrappers legacy names used across the component
+  const handleToggleTemplateSelector = () => openPanel('template');
+  const handleToggleDataManager = () => openPanel('data');
+  const handleToggleModeSelector = () => openPanel('mode');
+  const handleToggleDataPolicy = () => openPanel('policy');
+  const handleToggleDonation = () => openPanel('donation');
 
   const handleCloseTemplateSelector = () => {
     setIsTemplateSelectorVisible(false);
@@ -188,23 +169,6 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
     setTimeout(() => setShowModeSelector(false), 300);
   };
 
-  const handleToggleModeSelector = () => {
-    if (showModeSelector) {
-      setIsModeSelectorVisible(false);
-      setTimeout(() => setShowModeSelector(false), 300);
-    } else {
-      if (showDataManager) {
-        setShowDataManager(false);
-        setTimeout(() => {
-          setShowModeSelector(true);
-          setTimeout(() => setIsModeSelectorVisible(true), 10);
-        }, 150);
-      } else {
-        setShowModeSelector(true);
-        setTimeout(() => setIsModeSelectorVisible(true), 10);
-      }
-    }
-  };
 
   // Check if backend has an apiKey saved for the current user
   async function checkServerHasApiKey(): Promise<boolean> {
@@ -312,7 +276,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
   }
 
   function HeaderControls() {
-    const { t } = useTranslation();
+    const { t, currentLanguage, setLanguage } = useTranslation();
     // Desktop controls (visible on sm and up)
     const desktop = (
       <div className="hidden sm:flex items-center space-x-2 md:space-x-4">
@@ -404,20 +368,55 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
 
         {open && (
           <div className="absolute right-4 top-14 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-            <div className="py-2">
-              {documentMode === 'cv' && (
-                <button onClick={() => { handleToggleTemplateSelector(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('navigation.templates')}</button>
-              )}
-              {documentMode === 'cv' && (
-                <button onClick={() => { handleToggleDataManager(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('navigation.data')}</button>
-              )}
-              <button onClick={() => { handleToggleModeSelector(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('navigation.mode')} ({documentMode === 'cv' ? t('coverLetter.cv') : t('coverLetter.title')})</button>
-              <button onClick={() => { handleToggleDataPolicy(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('ui.dataPolicy')}</button>
-              <button onClick={() => { handleToggleDonation(); setOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('ui.donate')}</button>
-              <div className="px-4 py-2">
-                <LanguageSelector />
+            <div className="py-2 px-3">
+              {/* SWAS logo and user info for mobile menu */}
+              <div className="mb-3 flex flex-col items-center">
+                <a href="https://sw-as.online/" target="_blank" rel="noopener noreferrer" title="SWAS" className="mb-2">
+                  <img src={swasLogo} alt="SWAS Apps" className="h-8 w-auto rounded" style={{ background: '#fff' }} />
+                </a>
+                {userName && (
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-sm">{userName}</span>
+                  </div>
+                )}
               </div>
-              <button onClick={() => { setOpen(false); if (onLogout) onLogout(); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{t('ui.logout')}</button>
+              {documentMode === 'cv' && (
+                <button onClick={() => { handleToggleTemplateSelector(); setOpen(false); }} className="w-full flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg text-sm font-medium">
+                  <Settings className="h-4 w-4" />
+                  <span className="text-left">{t('navigation.templates')}</span>
+                </button>
+              )}
+              {documentMode === 'cv' && (
+                <button onClick={() => { handleToggleDataManager(); setOpen(false); }} className="w-full flex items-center space-x-2 px-3 py-2 mt-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg text-sm font-medium">
+                  <Database className="h-4 w-4" />
+                  <span className="text-left">{t('navigation.data')}</span>
+                </button>
+              )}
+              <button onClick={() => { handleToggleModeSelector(); setOpen(false); }} className="w-full flex items-center justify-between px-3 py-2 mt-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-all duration-200 shadow-lg text-sm font-medium">
+                <div className="flex items-center space-x-2">
+                  <FileText className="h-4 w-4" />
+                  <span className="text-left">{t('navigation.mode')}</span>
+                </div>
+                <span className="text-sm text-white/90">{documentMode === 'cv' ? t('coverLetter.cv') : t('coverLetter.title')}</span>
+              </button>
+              <button onClick={() => { handleToggleDataPolicy(); setOpen(false); }} className="w-full flex items-center space-x-2 px-3 py-2 mt-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg text-sm font-medium">
+                <FileText className="h-4 w-4 text-white" />
+                <span className="text-left">{t('ui.dataPolicy')}</span>
+              </button>
+              <button onClick={() => { handleToggleDonation(); setOpen(false); }} className="w-full flex items-center space-x-2 px-3 py-2 mt-2 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-all duration-200 shadow-lg text-sm font-medium">
+                <img src={premiumIcon} alt="Premium" className="h-4 w-4" />
+                <span className="text-left">{t('ui.donate')}</span>
+              </button>
+              <div className="w-full">
+                <div className="flex flex-col">
+                  <button onClick={() => { setLanguage('es'); setOpen(false); }} className={`w-full text-left px-3 py-2 rounded hover:bg-gray-50 ${currentLanguage === 'es' ? 'font-semibold' : ''}`}>Español (ES)</button>
+                  <button onClick={() => { setLanguage('en'); setOpen(false); }} className={`w-full text-left px-3 py-2 rounded hover:bg-gray-50 ${currentLanguage === 'en' ? 'font-semibold' : ''}`}>English (EN)</button>
+                </div>
+              </div>
+              <button onClick={() => { setOpen(false); if (onLogout) onLogout(); }} className="w-full flex items-center gap-2 px-3 py-2 mt-2 bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-lg hover:from-gray-500 hover:to-gray-700 transition-all duration-200 shadow-lg text-sm font-medium">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" /></svg>
+                <span className="text-left">{t('ui.logout')}</span>
+              </button>
             </div>
           </div>
         )}
@@ -451,13 +450,9 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
                 <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                   CV-Letter
                 </h1>
-                {userName && <div className="text-xs md:text-sm text-gray-600 mt-0.5">{userName}</div>}
+                {/* User name moved to mobile menu */}
               </div>
-              <div className="flex flex-col items-center justify-center mr-2">
-                <a href="https://sw-as.online/" target="_blank" rel="noopener noreferrer" title="Smart Web Application Store">
-                  <img src={swasLogo} alt="SWAS Logo" aria-label="Smart Web Application Store" className="h-8 md:h-10 w-auto rounded shadow-md hover:scale-105 transition-transform" style={{background: 'white', imageRendering: 'auto'}} />
-                </a>
-              </div>
+              {/* SWAS logo removed from main header (moved into mobile menu) */}
             </div>
             <HeaderControls />
           </div>

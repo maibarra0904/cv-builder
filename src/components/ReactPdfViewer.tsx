@@ -17,6 +17,35 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
 
   const { t, currentLanguage } = useTranslation();
 
+  // Ensure full PDF visibility on mobile: compute available viewport height
+  const [viewerHeightPx, setViewerHeightPx] = useState<number | null>(null);
+  const HEADER_OFFSET = 104; // matches layout top padding used in CVApp
+
+  useEffect(() => {
+    const updateHeight = () => {
+      try {
+        const w = window as Window & typeof globalThis;
+        const isMobile = w.matchMedia && w.matchMedia('(max-width: 640px)').matches;
+        if (isMobile) {
+          // use innerHeight to account for mobile browser UI
+          const h = Math.max(300, (w.innerHeight || 600) - HEADER_OFFSET);
+          setViewerHeightPx(h);
+        } else {
+          setViewerHeightPx(null);
+        }
+      } catch (err) {
+        setViewerHeightPx(null);
+      }
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('orientationchange', updateHeight);
+    };
+  }, []);
+
   // key used to force remount PDFViewer when reload is requested
   const [previewKey, setPreviewKey] = useState(0);
 
@@ -110,8 +139,8 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
       <div style={{ height: '100%', width: '100%' }}>
         {DocumentComponent ? (
           <PdfErrorBoundary onReload={() => setPreviewKey(k => k + 1)}>
-            <div key={previewKey} style={{ width: '100%', height: '100%' }}>
-              <PDFViewer style={{ width: '100%', height: '100%' }}>
+            <div key={previewKey} style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%' }}>
+              <PDFViewer style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%', overflow: 'auto' }}>
                 {DocumentComponent}
               </PDFViewer>
             </div>
