@@ -139,8 +139,8 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
       <div style={{ height: '100%', width: '100%' }}>
         {DocumentComponent ? (
           <PdfErrorBoundary onReload={() => setPreviewKey(k => k + 1)}>
-            <div key={previewKey} style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%' }}>
-              <PDFViewer style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%', overflow: 'auto' }}>
+            <div key={previewKey} style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%', overflow: viewerHeightPx ? 'auto' : undefined }}>
+              <PDFViewer style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%' }}>
                 {DocumentComponent}
               </PDFViewer>
             </div>
