@@ -19,6 +19,7 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
 
   // Ensure full PDF visibility on mobile: compute available viewport height
   const [viewerHeightPx, setViewerHeightPx] = useState<number | null>(null);
+  const [isMobileViewport, setIsMobileViewport] = useState<boolean>(false);
   const HEADER_OFFSET = 104; // matches layout top padding used in CVApp
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
       try {
         const w = window as Window & typeof globalThis;
         const isMobile = w.matchMedia && w.matchMedia('(max-width: 640px)').matches;
+        setIsMobileViewport(!!isMobile);
         if (isMobile) {
           // use innerHeight to account for mobile browser UI
           const h = Math.max(300, (w.innerHeight || 600) - HEADER_OFFSET);
@@ -35,6 +37,7 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
         }
       } catch (err) {
         setViewerHeightPx(null);
+        setIsMobileViewport(false);
       }
     };
     updateHeight();
@@ -137,22 +140,24 @@ export const ReactPdfViewer: React.FC<{ embedded?: boolean }> = ({ embedded = tr
   return (
     <div className="w-full h-full">
       <div style={{ height: '100%', width: '100%' }}>
-        {DocumentComponent ? (
-          <PdfErrorBoundary onReload={() => setPreviewKey(k => k + 1)}>
-            <div key={previewKey} style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%', overflow: viewerHeightPx ? 'auto' : undefined }}>
-              <PDFViewer style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%' }}>
-                {DocumentComponent}
-              </PDFViewer>
-            </div>
-          </PdfErrorBoundary>
-        ) : (
-          <div style={{ width: '100%', height: '100%' }} className="flex items-center justify-center text-gray-600">{t('messages.generating', 'Generando documento...')}</div>
-        )}
+        {!isMobileViewport ? (
+          DocumentComponent ? (
+            <PdfErrorBoundary onReload={() => setPreviewKey(k => k + 1)}>
+              <div key={previewKey} style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%', overflow: viewerHeightPx ? 'auto' : undefined }}>
+                <PDFViewer style={{ width: '100%', height: viewerHeightPx ? `${viewerHeightPx}px` : '100%' }}>
+                  {DocumentComponent}
+                </PDFViewer>
+              </div>
+            </PdfErrorBoundary>
+          ) : (
+            <div style={{ width: '100%', height: '100%' }} className="flex items-center justify-center text-gray-600">{t('messages.generating', 'Generando documento...')}</div>
+          )
+        ) : null}
       </div>
       <div className="mt-2 flex gap-2">
         {blobUrl && (
           <>
-            <a href={blobUrl} target="_blank" rel="noreferrer" className="px-3 py-1 bg-gray-100 rounded">Abrir en pestaña</a>
+            <a href={blobUrl} target="_blank" rel="noreferrer" className="px-3 py-1 bg-gray-100 rounded">{isMobileViewport ? 'Vista previa' : 'Abrir en pestaña'}</a>
             <button onClick={() => { const w = window.open(blobUrl); if (w) w.print(); }} className="px-3 py-1 bg-gray-100 rounded">Imprimir</button>
           </>
         )}
