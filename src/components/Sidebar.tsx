@@ -92,7 +92,7 @@ export function Sidebar() {
   // Antes este botón activaba el modo reordenamiento; ahora alterna
   // la visibilidad de la lista de secciones para dejar solo el área editable.
   const [showSectionsVisible, setShowSectionsVisible] = useState(true);
-  const [showSectionReorder, setShowSectionReorder] = useState(false);
+  const showSectionReorder = false; // modo reordenamiento no expuesto actualmente
 
   const sensors = useSensors(
     useSensor(PointerSensor),
