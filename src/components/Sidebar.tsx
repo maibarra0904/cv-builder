@@ -89,6 +89,9 @@ export function Sidebar() {
   const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState<keyof SectionConfig>('personalData');
   const [showAdditionalSections, setShowAdditionalSections] = useState(false);
+  // Antes este botón activaba el modo reordenamiento; ahora alterna
+  // la visibilidad de la lista de secciones para dejar solo el área editable.
+  const [showSectionsVisible, setShowSectionsVisible] = useState(true);
   const [showSectionReorder, setShowSectionReorder] = useState(false);
 
   const sensors = useSensors(
@@ -155,7 +158,7 @@ export function Sidebar() {
       <div
         ref={setNodeRef}
         style={style}
-        className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+        className={`p-2 rounded-md border transition-all duration-200 ${
           isActive 
             ? 'bg-blue-50 border-blue-300 text-blue-900' 
             : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -164,7 +167,7 @@ export function Sidebar() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => setActiveSection(sectionKey)}
-            className="flex items-center gap-3 flex-1 text-left"
+            className="flex items-center gap-2 flex-1 text-left text-sm"
           >
             {canReorder && (
               <div
@@ -175,8 +178,8 @@ export function Sidebar() {
                 <GripVertical size={16} className="text-gray-400" />
               </div>
             )}
-            <IconComponent size={20} />
-            <span className="font-medium">{label}</span>
+            <IconComponent size={16} />
+            <span className="font-medium text-sm">{label}</span>
           </button>
           <button
             onClick={() => {
@@ -241,68 +244,38 @@ export function Sidebar() {
       {/* Section Navigation */}
       <div className="border-b border-gray-200/50 p-3 md:p-4 bg-gradient-to-r from-white to-gray-50/50">
           <div className="flex items-center justify-between mb-3 md:mb-4">
-          <h2 className="text-base md:text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-            {t('ui.sectionsTitle')}
-          </h2>
+          <div>
+            <h2 className="text-base md:text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              {t('ui.sectionsTitle')}
+            </h2>
+          </div>
           <button
-            onClick={() => setShowSectionReorder(!showSectionReorder)}
+            onClick={() => setShowSectionsVisible(!showSectionsVisible)}
             className={`p-2 rounded-lg transition-all duration-200 ${
-              showSectionReorder 
-                ? 'bg-purple-100 text-purple-700 border border-purple-200' 
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-purple-50'
+              showSectionsVisible 
+                ? 'bg-white text-gray-600 border border-gray-200 hover:bg-purple-50'
+                : 'bg-purple-100 text-purple-700 border border-purple-200'
             }`}
-            title={showSectionReorder ? t('ui.toggleReorderOn') : t('ui.toggleReorderOff')}
+            title={showSectionsVisible ? t('ui.hideSections') : t('ui.showSections')}
           >
             <ArrowUpDown className="h-4 w-4" />
           </button>
         </div>
         
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="space-y-2">
-            {/* Secciones Principales */}
-            <SortableContext 
-              items={sortedMainSections} 
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-2">
-                {sortedMainSections.map(sectionKey => (
-                  <SortableSectionItem
-                    key={sectionKey}
-                    sectionKey={sectionKey}
-                    isActive={activeSection === sectionKey}
-                    canReorder={showSectionReorder}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-            
-            {/* Separador y Botón para Más Secciones */}
-            <div className="pt-3">
-                <button
-                onClick={() => setShowAdditionalSections(!showAdditionalSections)}
-                className="w-full flex items-center justify-between px-2 md:px-3 py-2 text-left rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 text-gray-600 border border-gray-200/70 bg-white/80 backdrop-blur-sm shadow-sm"
+        {showSectionsVisible && (
+          <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
               >
-                <span className="text-sm font-medium">{t('ui.moreSections')}</span>
-                {showAdditionalSections ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
-              </button>
-            </div>
-            
-            {/* Secciones Adicionales */}
-            {showAdditionalSections && (
+                <div className="space-y-1">
+              {/* Secciones Principales */}
               <SortableContext 
-                items={sortedAdditionalSections} 
+                items={sortedMainSections} 
                 strategy={verticalListSortingStrategy}
               >
-                <div className="space-y-2 pt-2">
-                  {sortedAdditionalSections.map(sectionKey => (
+                <div className="space-y-1">
+                  {sortedMainSections.map(sectionKey => (
                     <SortableSectionItem
                       key={sectionKey}
                       sectionKey={sectionKey}
@@ -312,9 +285,43 @@ export function Sidebar() {
                   ))}
                 </div>
               </SortableContext>
-            )}
-          </div>
-        </DndContext>
+              
+              {/* Separador y Botón para Más Secciones */}
+              <div className="pt-2">
+                  <button
+                  onClick={() => setShowAdditionalSections(!showAdditionalSections)}
+                  className="w-full flex items-center justify-between px-2 py-1 text-left rounded-md transition-all duration-200 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 text-gray-600 border border-gray-200/70 bg-white/80 backdrop-blur-sm shadow-sm"
+                >
+                  <span className="text-sm font-medium">{t('ui.moreSections')}</span>
+                  {showAdditionalSections ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              
+              {/* Secciones Adicionales */}
+              {showAdditionalSections && (
+                <SortableContext 
+                  items={sortedAdditionalSections} 
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-1 pt-1">
+                    {sortedAdditionalSections.map(sectionKey => (
+                      <SortableSectionItem
+                        key={sectionKey}
+                        sectionKey={sectionKey}
+                        isActive={activeSection === sectionKey}
+                        canReorder={showSectionReorder}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              )}
+            </div>
+          </DndContext>
+        )}
       </div>
 
       {/* Current Section Form */}
@@ -322,15 +329,15 @@ export function Sidebar() {
         <div className="p-3 md:p-4">
           {state.sectionConfig[activeSection].visible ? (
             <div>
-              <h3 className="text-base md:text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3 md:mb-4">
+              <h3 className="text-sm md:text-base font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2 md:mb-3">
                 {t(`sections.${sectionLabels[activeSection]}`)}
               </h3>
-              <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-gray-200/50">
+              <div className="bg-white/60 backdrop-blur-sm rounded-lg p-3 shadow-sm border border-gray-200/50">
                 {renderForm()}
               </div>
             </div>
           ) : (
-            <div className="text-center py-6 md:py-8 bg-white/40 backdrop-blur-sm rounded-lg border border-gray-200/50">
+            <div className="text-center py-4 md:py-6 bg-white/40 backdrop-blur-sm rounded-lg border border-gray-200/50">
               <div className="text-gray-400 mb-2">
                 {React.createElement(sectionIconsMap[activeSection], { size: 48, className: "mx-auto text-gray-300" })}
               </div>
