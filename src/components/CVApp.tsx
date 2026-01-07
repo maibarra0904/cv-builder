@@ -447,9 +447,14 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
               </div>
               {/* Bloque de texto a la derecha del bloque vertical */}
               <div className="flex flex-col justify-center">
-                <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                  CV-Letter
-                </h1>
+                <div className="flex items-center">
+                  <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    CV-Letter
+                  </h1>
+                  <a href="https://sw-as.online/" target="_blank" rel="noopener noreferrer" title="SWAS" className="ml-4 md:ml-6 hidden md:inline-flex items-center self-center">
+                    <img src={swasLogo} alt="SWAS" className="h-6 md:h-8 w-auto rounded bg-white p-0.5" />
+                  </a>
+                </div>
                 {/* User name moved to mobile menu */}
               </div>
               {/* SWAS logo removed from main header (moved into mobile menu) */}

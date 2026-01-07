@@ -1,5 +1,5 @@
 import { useCV } from '../../hooks/useCV';
-import { Camera, Upload } from 'lucide-react';
+import { Camera, Upload, Trash2 } from 'lucide-react';
 import { useRef } from 'react';
 import useTranslation from '../../i18n/useTranslation';
 
@@ -41,12 +41,32 @@ export function PersonalDataForm() {
               <Camera className="h-8 w-8 text-gray-400" />
             </div>
           )}
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="absolute bottom-2 right-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors"
-          >
-            <Upload className="h-4 w-4" />
-          </button>
+
+          {personalData.photo ? (
+            <>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute bottom-2 left-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors"
+                aria-label="Subir otra foto"
+              >
+                <Upload className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => handleInputChange('photo', '')}
+                className="absolute bottom-2 right-2 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white hover:bg-red-700 transition-colors"
+                aria-label="Eliminar foto"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute bottom-2 right-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors"
+            >
+              <Upload className="h-4 w-4" />
+            </button>
+          )}
         </div>
         <input
           ref={fileInputRef}
@@ -56,7 +76,7 @@ export function PersonalDataForm() {
           className="hidden"
         />
         <p className="text-sm text-gray-500 text-center">
-          {t('forms.personal.photoHint')}
+          {personalData.photo ? t('forms.personal.photoHintWithPhoto') : t('forms.personal.photoHint')}
         </p>
       </div>
 

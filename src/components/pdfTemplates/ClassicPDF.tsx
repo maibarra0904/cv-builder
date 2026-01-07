@@ -57,7 +57,19 @@ export const ClassicPDF: DocumentComponentType = ({ data, sectionConfig, languag
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          {p.photo && <Image src={p.photo} style={{ width: 72, height: 72, borderRadius: 8, marginBottom: 6, objectFit: 'cover' }} />}
+          {p.photo && (
+            <View style={{ height: 96, borderRadius: 8, overflow: 'hidden', marginBottom: 6 }}>
+              <Image
+                src={p.photo}
+                style={{
+                  height: 96,
+                  objectFit: 'contain',
+                  objectPosition: 'top',
+                  borderRadius: 8
+                }}
+              />
+            </View>
+          )}
           <Text style={styles.name}>{p.firstName} {p.lastName}</Text>
           <Text style={styles.contact}>{p.email} • {p.phone}</Text>
           {(p.address || p.city || p.country) && (

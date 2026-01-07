@@ -143,6 +143,7 @@ export const translations = {
     forms: {
       personal: {
         photoHint: 'Haz clic en el ícono para subir tu foto',
+        photoHintWithPhoto: 'Haz clic en el icono de la izquierda para subir otra foto o en el de la derecha para eliminarlo',
         firstName: 'Nombre *',
         lastName: 'Apellido *',
         firstNamePlaceholder: 'Tu nombre',
@@ -439,6 +440,7 @@ export const translations = {
     forms: {
       personal: {
         photoHint: 'Click the icon to upload your photo',
+        photoHintWithPhoto: 'Click the left icon to upload another photo or the right one to delete it',
         firstName: 'First name *',
         lastName: 'Last name *',
         firstNamePlaceholder: 'Your first name',

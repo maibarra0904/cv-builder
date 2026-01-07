@@ -74,7 +74,19 @@ export const ModernPDF: DocumentComponentType = ({ data, sectionConfig, language
               </View>
             )}
           </View>
-          {p.photo && <Image src={p.photo} style={{ width: 64, height: 64, borderRadius: 4, objectFit: 'cover' }} />}
+          {p.photo && (
+            <View style={{ height: 96, borderRadius: 8, overflow: 'hidden' }}>
+              <Image
+                src={p.photo}
+                style={{
+                  height: 96,
+                  objectFit: 'contain',
+                  objectPosition: 'top',
+                  borderRadius: 8
+                }}
+              />
+            </View>
+          )}
         </View>
 
         {sectionConfig.profile.visible && data.profile?.summary && (
