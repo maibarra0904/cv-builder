@@ -24,6 +24,17 @@ const styles = StyleSheet.create({
   date: { fontSize: 9, fontStyle: 'italic', color: '#444' }
 });
 
+const safeFormatDate = (dateStr?: string, locale = 'es') => {
+  try {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US');
+  } catch (e) {
+    return dateStr || '';
+  }
+};
+
 export const ClassicPDF: DocumentComponentType = ({ data, sectionConfig, language }) => {
   const p: Partial<PersonalData> = data.personalData ?? {};
   const getTranslation = (lang: string | undefined, path: string) => {
@@ -106,7 +117,7 @@ export const ClassicPDF: DocumentComponentType = ({ data, sectionConfig, languag
               <View key={e.id} wrap={false} style={{ marginBottom: 4 }}>
                 <Text style={styles.itemTitle}>{e.position}</Text>
                 <Text style={styles.small}>{e.company}</Text>
-                <Text style={styles.date}>{e.startDate} - {e.current ? t('pdf.present') : e.endDate}</Text>
+                <Text style={styles.date}>{safeFormatDate(e.startDate, language)} — {e.current ? t('pdf.present') : safeFormatDate(e.endDate, language)}</Text>
                 {e.location && <Text style={styles.small}>{e.location}</Text>}
                 {e.description && <Text style={styles.small}>{e.description}</Text>}
               </View>
@@ -121,7 +132,7 @@ export const ClassicPDF: DocumentComponentType = ({ data, sectionConfig, languag
               <View key={ed.id} wrap={false} style={{ marginBottom: 4 }}>
                 <Text style={styles.itemTitle}>{ed.degree || ed.institution}</Text>
                 <Text style={styles.small}>{ed.institution}</Text>
-                <Text style={styles.date}>{ed.startDate} - {ed.current ? t('pdf.present') : ed.endDate}</Text>
+                <Text style={styles.date}>{safeFormatDate(ed.startDate, language)} — {ed.current ? t('pdf.present') : safeFormatDate(ed.endDate, language)}</Text>
                 {ed.location && <Text style={styles.small}>{ed.location}</Text>}
               </View>
             ))}
@@ -217,7 +228,7 @@ export const ClassicPDF: DocumentComponentType = ({ data, sectionConfig, languag
             {data.volunteers.map(v => (
               <View key={v.id} style={{ marginBottom: 4 }}>
                 <Text style={styles.itemTitle}>{v.organization} — {v.role}</Text>
-                <Text style={styles.date}>{v.startDate}{v.current ? ` — ${t('pdf.present')}` : v.endDate}</Text>
+                <Text style={styles.date}>{safeFormatDate(v.startDate, language)} — {v.current ? ` — ${t('pdf.present')}` : safeFormatDate(v.endDate, language)}</Text>
                 {v.description && <Text style={styles.small}>{v.description}</Text>}
               </View>
             ))}
