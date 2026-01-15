@@ -63,7 +63,6 @@ function SortableEducationItem({ education, onEdit, onDelete }: Readonly<Sortabl
           <div className="flex-1">
             <h4 className="font-medium text-gray-900">{education.degree}</h4>
             <p className="text-sm text-gray-600">{education.institution}</p>
-            {education.field && <p className="text-sm text-gray-500">{education.field}</p>}
             {education.location && <p className="text-sm text-gray-500">{education.location}</p>}
             <p className="text-xs text-gray-500">
               {education.startDate} - {education.current ? 'Presente' : education.endDate}
@@ -97,7 +96,6 @@ export function EducationForm() {
   const [formData, setFormData] = useState<Omit<Education, 'id'>>({
     institution: '',
     degree: '',
-    field: '',
     startDate: '',
     endDate: '',
     current: false,
@@ -129,7 +127,6 @@ export function EducationForm() {
     setFormData({
       institution: '',
       degree: '',
-      field: '',
       startDate: '',
       endDate: '',
       current: false,
@@ -201,33 +198,18 @@ export function EducationForm() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t('forms.education.degree')}
-              </label>
-              <input
-                type="text"
-                value={formData.degree}
-                onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder={t('forms.education.degreePlaceholder') as string}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t('forms.education.field')}
-              </label>
-              <input
-                type="text"
-                value={formData.field}
-                onChange={(e) => setFormData({ ...formData, field: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder={t('forms.education.fieldPlaceholder') as string}
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t('forms.education.degree')}
+            </label>
+            <input
+              type="text"
+              value={formData.degree}
+              onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder={t('forms.education.degreePlaceholder') as string}
+              required
+            />
           </div>
 
           <div>

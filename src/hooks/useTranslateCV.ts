@@ -151,7 +151,6 @@ export function useTranslateCV() {
           ...edu,
           institution: await translateText(edu.institution, 'en'),
           degree: await translateText(edu.degree, 'en'),
-          field: await translateText(edu.field, 'en'),
           description: edu.description ? await translateText(edu.description, 'en') : undefined,
         }))
       ),

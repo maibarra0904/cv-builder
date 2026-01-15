@@ -7,19 +7,28 @@ import GeminiSetupModal from './components/GeminiSetupModal';
 
 const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const hasLocalApiKeyFlag = () => {
+    try { return localStorage.getItem('apiKey') === '1'; } catch { return false; }
+  };
 
   const handleLogin = (newToken: string) => {
     setToken(newToken);
     localStorage.setItem('token', newToken);
+    // If we already marked apiKey locally, skip prompting
+    if (hasLocalApiKeyFlag()) return;
     // After login, check if server has apiKey and show setup if missing
     (async () => {
       const has = await checkServerHasApiKey();
       if (!has) setShowSetup(true);
+      else {
+        try { localStorage.setItem('apiKey', '1'); } catch { }
+      }
     })();
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    try { localStorage.removeItem('apiKey'); } catch { }
     setToken(null);
   };
 
@@ -59,8 +68,13 @@ const App: React.FC = () => {
       try {
         const tokenLocal = localStorage.getItem('token');
         if (tokenLocal) {
+          // If marker exists locally, don't ask again
+          if (hasLocalApiKeyFlag()) return;
           const has = await checkServerHasApiKey();
           if (!has) setShowSetup(true);
+          else {
+            try { localStorage.setItem('apiKey', '1'); } catch { }
+          }
         }
       } catch (e) {
         // ignore

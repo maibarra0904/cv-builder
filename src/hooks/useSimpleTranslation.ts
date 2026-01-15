@@ -27,7 +27,6 @@ export function useSimpleTranslation() {
         ...item,
         institution: simpleTranslate(item.institution),
         degree: simpleTranslate(item.degree),
-        field: simpleTranslate(item.field),
         description: simpleTranslate(item.description || ''),
       })),
       experience: originalData.experience.map(item => ({

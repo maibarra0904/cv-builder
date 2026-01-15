@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 import { generateWithGemini } from '../services/geminiService';
 import useTranslation from '../i18n/useTranslation2';
 
-const GEMINI_KEY_STORAGE = 'GEMINI_API_KEY';
 const BACKEND_URL = (((import.meta as unknown) as { env?: Record<string, string> }).env?.VITE_BACKEND_URL) || '';
 
 export default function GeminiSetupModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -14,13 +13,13 @@ export default function GeminiSetupModal({ open, onClose }: { open: boolean; onC
     } catch { }
     return '';
   };
-  const initialKey = safeGetLocal(GEMINI_KEY_STORAGE);
-  const [key, setKey] = useState<string>(initialKey || '');
+  // Do NOT store the actual API key locally. Keep input empty by default.
+  const [key, setKey] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!open) return;
-    setKey(safeGetLocal(GEMINI_KEY_STORAGE) || '');
+    setKey('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -68,7 +67,8 @@ export default function GeminiSetupModal({ open, onClose }: { open: boolean; onC
         return;
       }
       await Swal.fire({ icon: 'success', title: t('gemini.keySavedTitle') || 'Clave registrada', text: t('gemini.keySavedServerText') || 'La API key se registró en el servidor correctamente.', confirmButtonText: t('ok') || 'Aceptar' });
-      try { localStorage.setItem(GEMINI_KEY_STORAGE, trimmed); } catch { }
+      // Save a local marker indicating there is a validated API key, but DO NOT store the real key.
+      try { localStorage.setItem('apiKey', '1'); } catch { }
       setLoading(false);
       onClose();
     } catch (err) {
