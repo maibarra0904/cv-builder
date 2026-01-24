@@ -157,7 +157,6 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
   const handleToggleDataManager = () => openPanel('data');
   const handleToggleModeSelector = () => openPanel('mode');
   const handleToggleDataPolicy = () => openPanel('policy');
-  const handleToggleDonation = () => openPanel('donation');
 
   const handleCloseTemplateSelector = () => {
     setIsTemplateSelectorVisible(false);
@@ -316,7 +315,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
           <span className="hidden sm:inline">{t('ui.dataPolicy')}</span>
         </button>
         <button
-          onClick={handleToggleDonation}
+          onClick={() => window.open('https://sw-as.online/contribution', '_blank', 'noopener,noreferrer')}
           className="flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-all duration-200 shadow-lg shadow-yellow-400/25 hover:shadow-yellow-500/30 hover:scale-105 text-xs md:text-sm font-medium"
           title={t('ui.donate')}
         >
@@ -403,7 +402,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
                 <FileText className="h-4 w-4 text-white" />
                 <span className="text-left">{t('ui.dataPolicy')}</span>
               </button>
-              <button onClick={() => { handleToggleDonation(); setOpen(false); }} className="w-full flex items-center space-x-2 px-3 py-2 mt-2 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-all duration-200 shadow-lg text-sm font-medium">
+              <button onClick={() => { window.open('https://sw-as.online/contribution', '_blank', 'noopener,noreferrer'); setOpen(false); }} className="w-full flex items-center space-x-2 px-3 py-2 mt-2 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-all duration-200 shadow-lg text-sm font-medium">
                 <img src={premiumIcon} alt="Premium" className="h-4 w-4" />
                 <span className="text-left">{t('ui.donate')}</span>
               </button>
