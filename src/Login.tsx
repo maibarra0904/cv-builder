@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import swasLogo from './assets/swas-logo.png';
-
-
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -24,23 +23,47 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
         throw new Error('Credenciales incorrectas');
       }
       const data = await response.json();
-      // Guardar purchasedProjects en localStorage
       if (data.user && Array.isArray(data.user.purchasedProjects)) {
         localStorage.setItem('purchasedProjects', JSON.stringify(data.user.purchasedProjects));
       }
-      // Store user object locally for other components
       try { 
         localStorage.setItem('user', JSON.stringify(data.user || {})); 
         if (data.user && data.user.name) localStorage.setItem('userName', data.user.name);
-      } catch { console.log(error) }
+      } catch { }
       if (!data.token) throw new Error('Token no recibido');
       onLogin(data.token);
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message || 'Error de conexión');
-      } else {
-        setError('Error de conexión');
+      setError(err instanceof Error ? err.message : 'Error de conexión');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    const API_URL = import.meta.env.VITE_BACKEND_URL;
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch(`${API_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken: credentialResponse.credential })
+      });
+      if (!response.ok) {
+        throw new Error('Error en autenticación con Google');
       }
+      const data = await response.json();
+      if (data.user && Array.isArray(data.user.purchasedProjects)) {
+        localStorage.setItem('purchasedProjects', JSON.stringify(data.user.purchasedProjects));
+      }
+      try { 
+        localStorage.setItem('user', JSON.stringify(data.user || {})); 
+        if (data.user && data.user.name) localStorage.setItem('userName', data.user.name);
+      } catch { }
+      if (!data.token) throw new Error('Token no recibido');
+      onLogin(data.token);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error de conexión');
     } finally {
       setLoading(false);
     }
@@ -79,11 +102,22 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold mb-4"
             disabled={loading}
           >
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
+          <div className="my-4 flex items-center justify-between">
+            <hr className="w-full border-gray-300" />
+            <span className="px-2 text-gray-500 text-sm">o</span>
+            <hr className="w-full border-gray-300" />
+          </div>
+          <div className="flex justify-center">
+            <GoogleLogin 
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Error al iniciar sesión con Google')}
+            />
+          </div>
         </form>
         <div className="mt-4 text-center">
           <a
@@ -99,15 +133,5 @@ const Login: React.FC<{ onLogin: (token: string) => void }> = ({ onLogin }) => {
     </div>
   );
 };
-    <div className="mt-4 text-center">
-            <a 
-              href={`${import.meta.env.VITE_FRONTEND_URL}/register`} 
-              className="text-blue-500 underline" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              ¿No tienes cuenta? Regístrate aquí
-            </a>
-      </div>      
 
 export default Login;
