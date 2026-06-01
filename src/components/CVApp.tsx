@@ -195,6 +195,26 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
     }
   }
 
+  // Fetch user profile from DB to get the actual user name
+  async function fetchUserProfile(): Promise<void> {
+    try {
+      const token = (typeof globalThis !== 'undefined' && (globalThis as unknown as Window).localStorage.getItem('token')) || '';
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const backend = (((import.meta as unknown) as { env?: Record<string, string> }).env?.VITE_BACKEND_URL) || '';
+      const url = backend ? `${backend.replace(/\/$/, '')}/user/favorites` : '/api/user/favorites';
+      const res = await fetch(url, { method: 'GET', headers });
+      if (!res.ok) return;
+      const data = await res.json().catch(() => null);
+      if (data && data.name) {
+        setUserName(data.name);
+        try { window.localStorage.setItem('userName', data.name); } catch {}
+      }
+    } catch (err) {
+      console.warn('fetchUserProfile failed', err);
+    }
+  }
+
   useEffect(() => {
     (async () => {
       try {
@@ -203,8 +223,29 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
       } catch (e) {
         setServerHasApiKey(false);
       }
+      try {
+        await fetchUserProfile();
+      } catch (e) {
+        // ignore
+      }
     })();
   }, []);
+
+  useEffect(() => {
+    const handleKeyRegistered = (e: Event) => {
+      const customEvent = e as CustomEvent<{ hasKey: boolean }>;
+      setServerHasApiKey(customEvent.detail?.hasKey ?? true);
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('gemini-api-key-registered', handleKeyRegistered);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('gemini-api-key-registered', handleKeyRegistered);
+      }
+    };
+  }, []);
+
 
   // Try to read user name from JWT token stored in localStorage (safe best-effort)
   useEffect(() => {
@@ -326,6 +367,15 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
         <div className="hidden sm:block">
           <LanguageSelector />
         </div>
+
+        {userName && (
+          <span className="hidden sm:inline-flex items-center text-sm font-semibold text-gray-700 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm transition-all duration-200 hover:bg-slate-200/50">
+            <svg className="w-4 h-4 mr-2 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            {userName}
+          </span>
+        )}
 
         <button
           onClick={onLogout}
@@ -484,11 +534,11 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
           </div>
         )}
 
-        {/* If server reports no apiKey, show a small notice with option to register */}
-        {serverHasApiKey === false && (
+        {/* If server reports no apiKey and we are in cover letter mode, show a small notice with option to register */}
+        {documentMode === 'cover' && serverHasApiKey === false && (
           <div className="fixed top-[72px] left-1/2 transform -translate-x-1/2 z-50 w-full max-w-3xl px-4">
                         <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-3 shadow-md flex items-center justify-between">
-                      <div className="text-sm"><Translate path="coverLetter.missingCvWarning" fallback="No se encontró una API key de Gemini registrada para tu cuenta. Para usar la generación de cartas registra tu clave." /></div>
+                      <div className="text-sm"><Translate path="coverLetter.missingApiKey" fallback="No se encontró una API key de Gemini registrada para tu cuenta. Para usar la generación de cartas registra tu clave." /></div>
                       <div className="flex items-center gap-2">
                         <button onClick={() => setShowSetupModal(true)} className="px-3 py-1.5 bg-yellow-600 text-white rounded"><Translate path="coverLetter.registerApiKey" fallback="Registrar API key" /></button>
                       </div>
@@ -645,7 +695,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
         <DataPolicyPanel open={showDataPolicy} onClose={() => setShowDataPolicy(false)} />
         <DonationPanel open={showDonationModal} onClose={() => setShowDonationModal(false)} />
         {/* Gemini Setup Modal (shared) */}
-        <GeminiSetupModal open={showSetupModal} onClose={() => { setShowSetupModal(false); setServerHasApiKey(true); }} />
+        <GeminiSetupModal open={showSetupModal} onClose={() => setShowSetupModal(false)} />
       </div>
     </CVProvider>
     </LanguageProvider>

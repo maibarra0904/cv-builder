@@ -13,5 +13,14 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['buffer']
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://staticwebappstore.netlify.app',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/.netlify/functions/api')
+      }
+    }
   }
 })

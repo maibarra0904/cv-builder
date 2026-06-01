@@ -9,14 +9,14 @@ export type GeminiResponse = {
   responseId?: string
 }
 
-const PRIMARY_MODEL = 'gemini-2.5-flash'
-const FALLBACK_MODELS = ['gemini-2.1', 'gemini-1.0']
+const PRIMARY_MODEL = 'gemini-1.5-flash'
+const FALLBACK_MODELS = ['gemini-2.0-flash', 'gemini-1.5-pro']
 const makeModelUrl = (modelName: string) => `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`
 
 async function fetchAvailableGenerateModels(apiKey: string): Promise<string[] | null> {
   try {
-    const url = 'https://generativelanguage.googleapis.com/v1beta/models'
-    const res = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey } })
+    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`
+    const res = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
     if (!res.ok) return null
     const j = await res.json().catch(() => null)
     if (!j) return null
@@ -130,13 +130,12 @@ export async function generateWithGemini(promptText: string, options?: GeminiOpt
 
     let lastError: Error | null = null
     for (const modelName of modelsToTry) {
-      const url = makeModelUrl(modelName)
+      const url = `${makeModelUrl(modelName)}?key=${apiKeyOverride}`
       try {
         const resp = await fetch(url, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'X-goog-api-key': apiKeyOverride
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(bodyToSend)
         })

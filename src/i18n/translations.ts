@@ -60,13 +60,28 @@ export const translations = {
       description: 'Elige si quieres trabajar con tu Hoja de Vida o generar una Carta de Presentación basada en ella. La carta usa los datos de tu CV para crear un texto personalizado.',
       missingCvWarning: 'Para generar una carta debes crear primero la hoja de vida con al menos tu nombre o experiencia.'
     },
+    loading: 'Validando...',
+    save: 'Guardar',
+    skip: 'Omitir por ahora',
+    error: 'Error',
+    ok: 'Aceptar',
     
     gemini: {
       setupTitle: 'Configurar Gemini',
       apiKeyPlaceholder: 'Pega tu API key aquí',
       validateButton: 'Validar y Guardar',
       validMessage: 'API key válida',
-      invalidMessage: 'API key inválida'
+      invalidMessage: 'API key inválida',
+      title: 'Configurar API de Gemini',
+      instructions: 'Pega aquí tu API key de Gemini. Validaremos la clave y la guardaremos cifrada en el servidor para uso futuro.',
+      placeholder: 'Pega tu API key aquí',
+      getKey: 'Obtener clave',
+      noKeyProvided: 'Debes pegar la API key',
+      invalidKeyTest: 'La clave no devolvió una respuesta válida desde Gemini.',
+      invalidKeyTestPrefix: 'La validación con Gemini falló',
+      saveFailedServer: 'No se pudo guardar la clave en el servidor',
+      keySavedTitle: 'Clave registrada',
+      keySavedServerText: 'La API key se registró en el servidor correctamente.'
     },
     dataManager: {
       title: 'Gestión de Datos',
@@ -415,12 +430,27 @@ export const translations = {
       description: 'Choose whether to work from your Resume or generate a Cover Letter based on it. The letter will use your CV data to create personalized text.',
       missingCvWarning: 'To generate a cover letter you must first create your Resume with at least your name or experience.'
     },
+    loading: 'Validating...',
+    save: 'Save',
+    skip: 'Skip for now',
+    error: 'Error',
+    ok: 'OK',
     gemini: {
       setupTitle: 'Configure Gemini',
       apiKeyPlaceholder: 'Paste your API key here',
       validateButton: 'Validate and Save',
       validMessage: 'API key valid',
-      invalidMessage: 'API key invalid'
+      invalidMessage: 'API key invalid',
+      title: 'Configure Gemini API',
+      instructions: 'Paste your Gemini API key here. We will validate the key and save it securely on the server for future use.',
+      placeholder: 'Paste your API key here',
+      getKey: 'Get key',
+      noKeyProvided: 'You must paste the API key',
+      invalidKeyTest: 'The key did not return a valid response from Gemini.',
+      invalidKeyTestPrefix: 'Gemini validation failed',
+      saveFailedServer: 'Could not save key on the server',
+      keySavedTitle: 'Key registered',
+      keySavedServerText: 'The API key was successfully registered on the server.'
     },
     ui: {
       moreSections: 'More Sections',
