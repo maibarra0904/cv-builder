@@ -18,7 +18,7 @@ import { FileText, Settings, Database } from 'lucide-react';
 import GeminiSetupModal from './GeminiSetupModal';
 import LanguageSelector from './LanguageSelector';
 import useTranslation from '../i18n/useTranslation2';
-import swasLogo from '../assets/swas-apps.png';
+import swasLogo from '../assets/swas-logo.png';
 
 function CVApp({ onLogout }: { onLogout?: () => void }) {
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
@@ -67,14 +67,14 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
     const handleSave = () => {
       try {
         if (typeof window !== 'undefined') window.localStorage.setItem('coverLetterText', text || '');
-      } catch (err) {}
+      } catch (err) { }
       Swal.fire({ icon: 'success', title: t('coverLetter.saved', 'Guardado'), timer: 1400, showConfirmButton: false });
     };
     const handleClear = () => {
       setText('');
       try {
         if (typeof window !== 'undefined') window.localStorage.removeItem('coverLetterText');
-      } catch (err) {}
+      } catch (err) { }
       Swal.fire({ icon: 'info', title: t('coverLetter.cleared', 'Texto limpiado'), timer: 1400, showConfirmButton: false });
     };
     const handleCopy = async () => {
@@ -208,7 +208,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
       const data = await res.json().catch(() => null);
       if (data && data.name) {
         setUserName(data.name);
-        try { window.localStorage.setItem('userName', data.name); } catch {}
+        try { window.localStorage.setItem('userName', data.name); } catch { }
       }
     } catch (err) {
       console.warn('fetchUserProfile failed', err);
@@ -265,7 +265,7 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
       const b64 = payload.replace(/-/g, '+').replace(/_/g, '/');
       const decoded = atob(b64.replace(/=+$/, ''));
       // Decode UTF-8 safely
-      const jsonString = decodeURIComponent(Array.prototype.map.call(decoded, function(c: string) {
+      const jsonString = decodeURIComponent(Array.prototype.map.call(decoded, function (c: string) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       const obj = JSON.parse(jsonString || '{}');
@@ -483,221 +483,218 @@ function CVApp({ onLogout }: { onLogout?: () => void }) {
   return (
     <LanguageProvider>
       <CVProvider>
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-200 via-blue-100 to-indigo-200 overflow-x-hidden cv-app-container pt-[104px]">
-        {/* Header (fixed) */}
-        <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md shadow-xl border-b border-gray-200/50 px-4 md:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 md:space-x-3">
-              {/* Bloque vertical: icono Info-Vitae arriba, SWAS logo debajo */}
-              <div className="flex flex-col items-center justify-center mr-2">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg mb-1">
-                  <FileText className="h-6 w-6 md:h-8 md:w-8 text-white" />
-                </div>
-              </div>
-              {/* Bloque de texto a la derecha del bloque vertical */}
-              <div className="flex flex-col justify-center">
-                <div className="flex items-center">
-                  <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                    CV-Letter
-                  </h1>
-                  <a href="https://sw-as.online/" target="_blank" rel="noopener noreferrer" title="SWAS" className="ml-4 md:ml-6 hidden md:inline-flex items-center self-center">
-                    <img src={swasLogo} alt="SWAS" className="h-6 md:h-8 w-auto rounded bg-white p-0.5" />
-                  </a>
-                </div>
-                {/* User name moved to mobile menu */}
-              </div>
-              {/* SWAS logo removed from main header (moved into mobile menu) */}
-            </div>
-            <HeaderControls />
-          </div>
-        </header>
-
-        {/* Template Selector Modal */}
-        {showTemplateSelector && (
-          <div className={`fixed top-0 right-0 w-full sm:w-80 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-md border-l border-gray-200/50 h-screen overflow-y-auto transform transition-transform duration-300 z-10 shadow-2xl ${
-            isTemplateSelectorVisible ? 'translate-x-0' : 'translate-x-full'
-          }`} style={{ top: '104px' }}>
-            <div className="p-4 bg-gradient-to-b from-white/80 to-gray-50/80 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Selector de Plantillas</h2>
-                <button
-                  onClick={handleCloseTemplateSelector}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <TemplateSelector onTemplateSelect={handleCloseTemplateSelector} />
-            </div>
-          </div>
-        )}
-
-        {/* If server reports no apiKey and we are in cover letter mode, show a small notice with option to register */}
-        {documentMode === 'cover' && serverHasApiKey === false && (
-          <div className="fixed top-[72px] left-1/2 transform -translate-x-1/2 z-50 w-full max-w-3xl px-4">
-                        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-3 shadow-md flex items-center justify-between">
-                      <div className="text-sm"><Translate path="coverLetter.missingApiKey" fallback="No se encontró una API key de Gemini registrada para tu cuenta. Para usar la generación de cartas registra tu clave." /></div>
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => setShowSetupModal(true)} className="px-3 py-1.5 bg-yellow-600 text-white rounded"><Translate path="coverLetter.registerApiKey" fallback="Registrar API key" /></button>
-                      </div>
-                    </div>
-          </div>
-        )}
-
-        {/* Mode Selector Panel */}
-        {showModeSelector && (
-          <div className={`fixed top-0 right-0 w-full sm:w-80 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-md border-l border-gray-200/50 h-screen overflow-y-auto transform transition-transform duration-300 z-10 shadow-2xl ${
-            isModeSelectorVisible ? 'translate-x-0' : 'translate-x-full'
-          }`} style={{ top: '104px' }}>
-            <div className="p-4 bg-gradient-to-b from-white/80 to-gray-50/80 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Modo de Documento</h2>
-                <button
-                  onClick={handleCloseModeSelector}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <ModePanel />
-            </div>
-          </div>
-        )}
-
-        {/* Overlay for mode selector */}
-        {showModeSelector && (
-          <button
-            className="fixed inset-0 bg-gradient-to-br from-black/40 via-slate-900/30 to-black/40 backdrop-blur-sm z-[9] cursor-pointer border-0 p-0"
-            style={{ top: '104px' }}
-            onClick={handleCloseModeSelector}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                handleCloseModeSelector();
-              }
-            }}
-            aria-label="Cerrar selector de modo"
-          />
-        )}
-
-        {/* Overlay for template selector */}
-        {showTemplateSelector && (
-          <button
-            className="fixed inset-0 bg-gradient-to-br from-black/40 via-slate-900/30 to-black/40 backdrop-blur-sm z-[9] cursor-pointer border-0 p-0"
-            style={{ top: '104px' }}
-            onClick={handleCloseTemplateSelector}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                handleCloseTemplateSelector();
-              }
-            }}
-            aria-label="Cerrar selector de plantillas"
-          />
-        )}
-
-        {/* Main Content */}
-        <div className="flex flex-col lg:flex-row relative min-h-[calc(100vh-104px)]">
-          {/* Left Sidebar - Form (Mobile: Stack above, Desktop: Side panel) */}
-          <div className="w-full lg:w-1/3 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-sm border-r border-gray-200/50 lg:h-[calc(100vh-104px)] overflow-y-auto shadow-lg">
-            {documentMode === 'cover' ? (
-              <div className="p-4">
-                <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3"><Translate path="coverLetter.title" fallback="Carta de Presentación" /></h2>
-                <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-gray-200/50 space-y-3">
-                  <CoverLetterForm onGenerate={(text) => {
-                    try {
-                      if (typeof window !== 'undefined') window.localStorage.setItem('coverLetterText', text || '');
-                    } catch (e) {
-                      // ignore localStorage errors
-                    }
-                    setCoverLetterText(text);
-                  }} serverHasApiKey={serverHasApiKey ?? undefined} />
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1"><Translate path="coverLetter.editableLabel" fallback="Texto editable de la carta" /></label>
-                    <textarea
-                      value={coverLetterText}
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        try {
-                          if (typeof window !== 'undefined') window.localStorage.setItem('coverLetterText', v || '');
-                        } catch (err) {
-                          // ignore
-                        }
-                        setCoverLetterText(v);
-                      }}
-                      rows={12}
-                      className="w-full border rounded px-2 py-2 resize-y"
-                    />
-                      <CoverLetterActions text={coverLetterText} setText={setCoverLetterText} />
+        <div className="min-h-screen w-full bg-gradient-to-br from-slate-200 via-blue-100 to-indigo-200 overflow-x-hidden cv-app-container pt-[104px]">
+          {/* Header (fixed) */}
+          <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md shadow-xl border-b border-gray-200/50 px-4 md:px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 md:space-x-3">
+                {/* Bloque vertical: icono Info-Vitae arriba, SWAS logo debajo */}
+                <div className="flex flex-col items-center justify-center mr-2">
+                  <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg mb-1">
+                    <FileText className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
                 </div>
+                {/* Bloque de texto a la derecha del bloque vertical */}
+                <div className="flex flex-col justify-center">
+                  <div className="flex items-center">
+                    <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                      CV-Letter
+                    </h1>
+                    <a href="https://sw-as.online/" target="_blank" rel="noopener noreferrer" title="SWAS" className="ml-4 md:ml-6 hidden md:inline-flex items-center self-center">
+                      <img src={swasLogo} alt="SWAS" className="h-6 md:h-8 w-auto rounded bg-white p-0.5" />
+                    </a>
+                  </div>
+                  {/* User name moved to mobile menu */}
+                </div>
+                {/* SWAS logo removed from main header (moved into mobile menu) */}
               </div>
-            ) : (
-              <Sidebar />
-            )}
-          </div>
-
-          {/* Center Panel - Preview (Mobile: Full width, Desktop: Flex-1) */}
-          <div className={`flex-1 bg-gradient-to-br from-slate-100 via-gray-200 to-slate-300 lg:h-[calc(100vh-104px)] overflow-y-auto transition-all duration-300 ${(showDataManager || showTemplateSelector || showDataPolicy || showDonationModal) ? 'lg:mr-80' : 'lg:mr-0'}`}>
-            {/* Offscreen HTML preview used for PDF capture (kept in DOM) */}
-            
-
-            <div style={{ minHeight: '100%', height: '100%' }}>
-              <ErrorBoundary>
-                {documentMode === 'cover' ? (
-                  <CoverLetterPdfViewer text={coverLetterText} />
-                ) : (
-                  <ReactPdfViewer embedded />
-                )}
-              </ErrorBoundary>
+              <HeaderControls />
             </div>
-          </div>
+          </header>
 
-          {/* Right Panel - Data Management (Collapsible) */}
-          <div className={`fixed top-0 right-0 w-full sm:w-80 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-md border-l border-gray-200/50 h-[calc(100vh-104px)] overflow-y-auto transform transition-transform duration-300 z-10 shadow-2xl ${
-            showDataManager ? 'translate-x-0' : 'translate-x-full'
-          }`} style={{ top: '104px' }}>
-            <div className="p-4 bg-gradient-to-b from-white/80 to-gray-50/80 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Panel de Gestión</h2>
-                <button
-                  onClick={() => setShowDataManager(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+          {/* Template Selector Modal */}
+          {showTemplateSelector && (
+            <div className={`fixed top-0 right-0 w-full sm:w-80 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-md border-l border-gray-200/50 h-screen overflow-y-auto transform transition-transform duration-300 z-10 shadow-2xl ${isTemplateSelectorVisible ? 'translate-x-0' : 'translate-x-full'
+              }`} style={{ top: '104px' }}>
+              <div className="p-4 bg-gradient-to-b from-white/80 to-gray-50/80 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Selector de Plantillas</h2>
+                  <button
+                    onClick={handleCloseTemplateSelector}
+                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <TemplateSelector onTemplateSelect={handleCloseTemplateSelector} />
               </div>
-              <DataManager />
             </div>
-          </div>
+          )}
 
-          {/* Overlay when data manager is open */}
-          {showDataManager && (
+          {/* If server reports no apiKey and we are in cover letter mode, show a small notice with option to register */}
+          {documentMode === 'cover' && serverHasApiKey === false && (
+            <div className="fixed top-[72px] left-1/2 transform -translate-x-1/2 z-50 w-full max-w-3xl px-4">
+              <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-3 shadow-md flex items-center justify-between">
+                <div className="text-sm"><Translate path="coverLetter.missingApiKey" fallback="No se encontró una API key de Gemini registrada para tu cuenta. Para usar la generación de cartas registra tu clave." /></div>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => setShowSetupModal(true)} className="px-3 py-1.5 bg-yellow-600 text-white rounded"><Translate path="coverLetter.registerApiKey" fallback="Registrar API key" /></button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Mode Selector Panel */}
+          {showModeSelector && (
+            <div className={`fixed top-0 right-0 w-full sm:w-80 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-md border-l border-gray-200/50 h-screen overflow-y-auto transform transition-transform duration-300 z-10 shadow-2xl ${isModeSelectorVisible ? 'translate-x-0' : 'translate-x-full'
+              }`} style={{ top: '104px' }}>
+              <div className="p-4 bg-gradient-to-b from-white/80 to-gray-50/80 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Modo de Documento</h2>
+                  <button
+                    onClick={handleCloseModeSelector}
+                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <ModePanel />
+              </div>
+            </div>
+          )}
+
+          {/* Overlay for mode selector */}
+          {showModeSelector && (
             <button
               className="fixed inset-0 bg-gradient-to-br from-black/40 via-slate-900/30 to-black/40 backdrop-blur-sm z-[9] cursor-pointer border-0 p-0"
               style={{ top: '104px' }}
-              onClick={() => setShowDataManager(false)}
+              onClick={handleCloseModeSelector}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
-                  setShowDataManager(false);
+                  handleCloseModeSelector();
                 }
               }}
-              aria-label="Cerrar panel de gestión de datos"
+              aria-label="Cerrar selector de modo"
             />
           )}
+
+          {/* Overlay for template selector */}
+          {showTemplateSelector && (
+            <button
+              className="fixed inset-0 bg-gradient-to-br from-black/40 via-slate-900/30 to-black/40 backdrop-blur-sm z-[9] cursor-pointer border-0 p-0"
+              style={{ top: '104px' }}
+              onClick={handleCloseTemplateSelector}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  handleCloseTemplateSelector();
+                }
+              }}
+              aria-label="Cerrar selector de plantillas"
+            />
+          )}
+
+          {/* Main Content */}
+          <div className="flex flex-col lg:flex-row relative min-h-[calc(100vh-104px)]">
+            {/* Left Sidebar - Form (Mobile: Stack above, Desktop: Side panel) */}
+            <div className="w-full lg:w-1/3 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-sm border-r border-gray-200/50 lg:h-[calc(100vh-104px)] overflow-y-auto shadow-lg">
+              {documentMode === 'cover' ? (
+                <div className="p-4">
+                  <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3"><Translate path="coverLetter.title" fallback="Carta de Presentación" /></h2>
+                  <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-gray-200/50 space-y-3">
+                    <CoverLetterForm onGenerate={(text) => {
+                      try {
+                        if (typeof window !== 'undefined') window.localStorage.setItem('coverLetterText', text || '');
+                      } catch (e) {
+                        // ignore localStorage errors
+                      }
+                      setCoverLetterText(text);
+                    }} serverHasApiKey={serverHasApiKey ?? undefined} />
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1"><Translate path="coverLetter.editableLabel" fallback="Texto editable de la carta" /></label>
+                      <textarea
+                        value={coverLetterText}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          try {
+                            if (typeof window !== 'undefined') window.localStorage.setItem('coverLetterText', v || '');
+                          } catch (err) {
+                            // ignore
+                          }
+                          setCoverLetterText(v);
+                        }}
+                        rows={12}
+                        className="w-full border rounded px-2 py-2 resize-y"
+                      />
+                      <CoverLetterActions text={coverLetterText} setText={setCoverLetterText} />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Sidebar />
+              )}
+            </div>
+
+            {/* Center Panel - Preview (Mobile: Full width, Desktop: Flex-1) */}
+            <div className={`flex-1 bg-gradient-to-br from-slate-100 via-gray-200 to-slate-300 lg:h-[calc(100vh-104px)] overflow-y-auto transition-all duration-300 ${(showDataManager || showTemplateSelector || showDataPolicy || showDonationModal) ? 'lg:mr-80' : 'lg:mr-0'}`}>
+              {/* Offscreen HTML preview used for PDF capture (kept in DOM) */}
+
+
+              <div style={{ minHeight: '100%', height: '100%' }}>
+                <ErrorBoundary>
+                  {documentMode === 'cover' ? (
+                    <CoverLetterPdfViewer text={coverLetterText} />
+                  ) : (
+                    <ReactPdfViewer embedded />
+                  )}
+                </ErrorBoundary>
+              </div>
+            </div>
+
+            {/* Right Panel - Data Management (Collapsible) */}
+            <div className={`fixed top-0 right-0 w-full sm:w-80 bg-gradient-to-b from-white via-gray-50 to-gray-100 backdrop-blur-md border-l border-gray-200/50 h-[calc(100vh-104px)] overflow-y-auto transform transition-transform duration-300 z-10 shadow-2xl ${showDataManager ? 'translate-x-0' : 'translate-x-full'
+              }`} style={{ top: '104px' }}>
+              <div className="p-4 bg-gradient-to-b from-white/80 to-gray-50/80 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Panel de Gestión</h2>
+                  <button
+                    onClick={() => setShowDataManager(false)}
+                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <DataManager />
+              </div>
+            </div>
+
+            {/* Overlay when data manager is open */}
+            {showDataManager && (
+              <button
+                className="fixed inset-0 bg-gradient-to-br from-black/40 via-slate-900/30 to-black/40 backdrop-blur-sm z-[9] cursor-pointer border-0 p-0"
+                style={{ top: '104px' }}
+                onClick={() => setShowDataManager(false)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    setShowDataManager(false);
+                  }
+                }}
+                aria-label="Cerrar panel de gestión de datos"
+              />
+            )}
+          </div>
+          {/* Side panels: Data Policy & Donation (slide from right) */}
+          <DataPolicyPanel open={showDataPolicy} onClose={() => setShowDataPolicy(false)} />
+          <DonationPanel open={showDonationModal} onClose={() => setShowDonationModal(false)} />
+          {/* Gemini Setup Modal (shared) */}
+          <GeminiSetupModal open={showSetupModal} onClose={() => setShowSetupModal(false)} />
         </div>
-        {/* Side panels: Data Policy & Donation (slide from right) */}
-        <DataPolicyPanel open={showDataPolicy} onClose={() => setShowDataPolicy(false)} />
-        <DonationPanel open={showDonationModal} onClose={() => setShowDonationModal(false)} />
-        {/* Gemini Setup Modal (shared) */}
-        <GeminiSetupModal open={showSetupModal} onClose={() => setShowSetupModal(false)} />
-      </div>
-    </CVProvider>
+      </CVProvider>
     </LanguageProvider>
   );
 }
